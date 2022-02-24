@@ -1,0 +1,36 @@
+{
+  "author": "Flywheel",
+  "cite": "",
+  "command": "poetry run python run.py",
+  "config": {
+    "debug": {
+      "default": false,
+      "description": "Log debug messages",
+      "type": "boolean"
+    }
+  },
+  "custom": {
+    "flywheel": {
+      "suite": "{{Curation}}"
+    },
+    "gear-builder": {
+      "category": "converter",
+      "image": "flywheel/skeleton:0.0.1"
+    }
+  },
+  "description": "{{ }}",
+  "environment": {},
+  "inputs": {
+    "{{text-input}}": {
+      "base": "file",
+      "description": "{{A text file.}}"
+    }
+  },
+  "label": "Skeleton",
+  "license": "MIT",
+  "maintainer": "Flywheel <support@flywheel.io>",
+  "name": "skeleton",
+  "source": "https://gitlab.com/flywheel-io/flywheel-apps/templates/{{skeleton}}",
+  "url": "https://gitlab.com/flywheel-io/flywheel-apps/templates/{{skeleton}}",
+  "version": "0.0.1"
+}
