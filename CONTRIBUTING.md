@@ -6,8 +6,14 @@
 2. Follow instructions to [install pre-commit](https://pre-commit.com/#install) 
 
 After cloning the repo:
+
+(If you need to change your python version:)
+```shell
+poetry env use <path/to/your/python/executable>
+poetry update
+```
 1. `poetry install`: Install project and all dependencies (see __Dependency management__ below)
-2. `pre-commit install`: Install pre-commit hooks (see __Linting and Testing__ below)
+2. `poetry run pre-commit install`: Install pre-commit hooks (see __Linting and Testing__ below)
 
 ## Dependency management
 This gear uses [`poetry`](https://python-poetry.org/) to manage dependencies, 
