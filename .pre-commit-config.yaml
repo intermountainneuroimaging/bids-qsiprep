@@ -1,7 +1,7 @@
 repos:
   # Hooks for non python files
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: master
+    rev: main
     hooks:
     - id: check-json
     - id: check-toml
