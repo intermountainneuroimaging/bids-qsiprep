@@ -15,7 +15,7 @@ This gear runs the official [`pennbbl/qsiprep:0.15.1` Docker image](https://hub.
 *{Link To FAQ}*
 
 ### Summary
-`qsiprep` configures pipelines for processing diffusion-weighted MRI (dMRI) data. The main features of this software are
+`qsiprep` configures pipelines for processing diffusion-weighted MRI (dMRI) data. The main features of this software are:
 
   1. A BIDS-app approach to preprocessing nearly all kinds of modern diffusion MRI data.
   2. Automatically generated preprocessing pipelines that correctly group, distortion correct,
