@@ -24,13 +24,13 @@ log = logging.getLogger(__name__)
 def main(context: GearToolkitContext) -> None:  # pragma: no cover
     """Parses config and run"""
 
-    # Call the fw_gear_skeleton.parser.parse_config function
+    # Call the fw_gear_bids_qsiprep.parser.parse_config function
     # to extract the args, kwargs from the context (e.g. config.json).
-    debug, text = parse_config(context)
+    debug, gear_options, app_options = parse_config(context)
 
-    # Pass the args, kwargs to fw_gear_skeleton.main.run function to execute
+    # Pass the args, kwargs to fw_gear_qsiprep.main.run function to execute
     # the main functionality of the gear.
-    e_code = run(text)
+    e_code = run(gear_options, app_options)
 
     # Exit the python script (and thus the container) with the exit
     # code returned by example_gear.main.run function.

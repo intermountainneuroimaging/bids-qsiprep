@@ -5,7 +5,7 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def run(text):
+def run(gear_options, app_options):
     """[summary]
 
     Returns:
