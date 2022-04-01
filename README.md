@@ -1,14 +1,11 @@
-# {{Skeleton Gear}}
-This was created from [poetry-cow-says](https://gitlab.com/flywheel-io/flywheel-apps/templates/poetry-cow-says). 
-Some things (packages in .toml, GUIDELINES.md, `tests/test_main.py` methods) 
-were removed to remove conflicts for new gears. This gear does
-not do anything, just used as a "bare bones" template.
+# QSIprep Gear
+This gear runs [QSIprep](https://qsiprep.readthedocs.io/) on [BIDS-curated data](https://bids.neuroimaging.io/).
 
-This section provides an overview of what this gear implements. Please modify this file according to your gear information.  
+For a description of what QSIprep does, read the [official documentation](https://qsiprep.readthedocs.io/).  
+
+This gear runs the official [`pennbbl/qsiprep:0.15.1` Docker image](https://hub.docker.com/r/pennbbl/qsiprep)
 
 #### __Note__: `DOCKER_HUB` var in `.gitlab-ci.yml` has changed to `false`. By default, this should be set to `true`
-
-#### TODO: In `.env` file, we have changed the coverage to `0`; please modify that to 90% for critical gears and 70-90% for all others.
 
 # Import Metadata (import-metadata)
 
@@ -18,7 +15,15 @@ This section provides an overview of what this gear implements. Please modify th
 *{Link To FAQ}*
 
 ### Summary
-*{From the "description" section of the manifest}*
+`qsiprep` configures pipelines for processing diffusion-weighted MRI (dMRI) data. The main features of this software are:
+
+  1. A BIDS-app approach to preprocessing nearly all kinds of modern diffusion MRI data.
+  2. Automatically generated preprocessing pipelines that correctly group, distortion correct,
+     motion correct, denoise, coregister and resample your scans, producing visual reports and
+     QC metrics.
+  3. A system for running state-of-the-art reconstruction pipelines that include algorithms
+     from Dipy_, MRTrix_, `DSI Studio`_  and others.
+  4. A novel motion correction algorithm that works on DSI and random q-space sampling schemes
 
 ### Cite
 *license:* *{From the "license" section of the manifest}*
@@ -36,8 +41,8 @@ This section provides an overview of what this gear implements. Please modify th
 *Gear Level:*
 
 - [ ] Project
-- [ ] Subject
-- [ ] Session
+- [x] Subject
+- [x] Session
 - [ ] Acquisition
 - [ ] Analysis
 
