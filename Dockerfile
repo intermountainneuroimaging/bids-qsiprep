@@ -24,6 +24,7 @@ RUN poetry install --no-dev
 # Note: poetry requires a README.md to install the current project
 COPY run.py manifest.json README.md $FLYWHEEL/
 COPY fw_gear_bids_qsiprep $FLYWHEEL/fw_gear_bids_qsiprep
+COPY utils $FLYWHEEL/utils
 RUN poetry install --no-dev
 
 # Configure entrypoint

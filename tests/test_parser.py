@@ -1,5 +1,6 @@
 """Module to test parser.py"""
 
+from os import cpu_count as os_cpu_count
 from unittest.mock import MagicMock
 
 from flywheel_gear_toolkit import GearToolkitContext
@@ -35,6 +36,9 @@ def test_parse_config(tmpdir):
             for key, value in my_dict.items():
                 gear_context.config[key] = value
 
+        # To test that we limit the number of cpus correctly:
+        gear_context.config["n_cpus"] = 100
+
         ###   call the parser:   ###
 
         debug, gear_opt, app_opt = parse_config(gear_context)
@@ -52,6 +56,10 @@ def test_parse_config(tmpdir):
 
         for bad_key in bad_options:
             assert bad_key not in gear_opt and bad_key not in app_opt
+
+        # Check that the n_cpus in the app_options is at most the number of cpus
+        # available in the system, even though we requested more than that:
+        assert app_opt["n_cpus"] <= os_cpu_count()
 
         # list the expected calls to "context.get_input_call()":
         expected_get_input_path_calls = [
