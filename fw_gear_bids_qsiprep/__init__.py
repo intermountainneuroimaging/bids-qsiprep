@@ -1,4 +1,4 @@
-"""The fw_gear_skeleton package."""
+"""The fw_gear_bids_qsiprep package."""
 from importlib.metadata import version
 
 try:
