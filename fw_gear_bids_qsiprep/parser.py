@@ -11,7 +11,7 @@ def parse_config(
     gear_context: GearToolkitContext,
 ) -> Tuple[bool, dict, dict]:
     """Parse the config and other options from the context,
-     both gear- and app-options
+     both gear and app options
 
     Returns:
         debug: debug flag

@@ -5,14 +5,12 @@ import sys
 
 from flywheel_gear_toolkit import GearToolkitContext
 
-# This design with a separate main and parser module
-# allows the gear to be publishable and the main interfaces
-# to it can then be imported in another project which enables
-# chaining multiple gears together.
+# This design with the main interfaces separated from a gear module (with main and parser)
+# allows the gear module to be publishable, so it can then be imported in another project,
+# which enables chaining multiple gears together.
 from fw_gear_bids_qsiprep.main import run
 from fw_gear_bids_qsiprep.parser import parse_config
 
-# The run.py should be as minimal as possible.
 # The gear is split up into 2 main components. The run.py file which is executed
 # when the container runs. The run.py file then imports the rest of the gear as a
 # module.
@@ -33,7 +31,7 @@ def main(context: GearToolkitContext) -> None:  # pragma: no cover
     e_code = run(gear_options, app_options)
 
     # Exit the python script (and thus the container) with the exit
-    # code returned by example_gear.main.run function.
+    # code returned by fw_gear_bids_qsiprep.main.run function.
     sys.exit(e_code)
 
 
