@@ -5,12 +5,18 @@ import logging
 log = logging.getLogger(__name__)
 
 
-def run(text):
-    """[summary]
+def run(gear_options: dict, app_options: dict) -> int:
+    """Run QSIPrep itself
+
+    Arguments:
+        gear_options: dict with gear-specific options
+        app_options: dict with options for the BIDS-App
 
     Returns:
-        [type]: [description]
+        run_error: any error encountered running the app. (0: no error)
     """
     log.info("This is the beginning of the run file")
 
-    return 0
+    run_error = 0
+
+    return run_error

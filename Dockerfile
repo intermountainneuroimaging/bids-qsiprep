@@ -1,6 +1,6 @@
 # the qsiprep image is huge (11.6 GB), so the GitLab CI tests fail to even
 # download it with the error: "no space left on device".
-# For now I'm going to use a vanila Python, so that I can push commits.
+# For now I'm going to use a vanilla Python, so that I can push commits.
 #FROM pennbbl/qsiprep:0.15.1 as base
 FROM python:3.8.10-slim-buster as base
 
@@ -24,6 +24,7 @@ RUN poetry install --no-dev
 # Note: poetry requires a README.md to install the current project
 COPY run.py manifest.json README.md $FLYWHEEL/
 COPY fw_gear_bids_qsiprep $FLYWHEEL/fw_gear_bids_qsiprep
+COPY utils $FLYWHEEL/utils
 RUN poetry install --no-dev
 
 # Configure entrypoint
