@@ -87,7 +87,7 @@ def parse_config(
     * output-space: ADDED...though it seems limited, it's not deprecated...maybe they have future plans?
     * template: ADDED, though also limited
     * output-resolution: ADDED
-    * b0-to-t1w-transform
+    * b0-to-t1w-transform: ADDED
     * intramodal-template-iters: ADDED
     * intramodal-template-transform: ADDED
     * b0-motion-corr-to: ADDED
