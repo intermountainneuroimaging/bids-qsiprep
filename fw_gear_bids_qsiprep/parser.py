@@ -3,7 +3,7 @@ from typing import Tuple
 
 from flywheel_gear_toolkit import GearToolkitContext
 
-from utils.fly.set_performance_config import set_n_cpus
+from utils.fly.set_performance_config import set_mem_gb, set_n_cpus
 
 
 # This function mainly parses gear_context's config.json file and returns relevant inputs and options.
@@ -161,7 +161,7 @@ def parse_config(
     app_options = {key: gear_context.config.get(key) for key in app_options_keys}
 
     app_options["n_cpus"] = set_n_cpus(app_options["n_cpus"])
-    # app_options["mem_mb"] = set_mem_gb(app_options["mem_gb"])
+    app_options["mem_mb"] = 1024 * set_mem_gb((app_options["mem_mb"] or 0) / 1024)
 
     rs_path = gear_context.get_input_path("recon-spec")
     if rs_path:

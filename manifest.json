@@ -270,12 +270,12 @@
       "type": "string"
     },
     "n_cpus": {
-      "description": "Number of CPUs/cores to use",
+      "description": "Number of CPUs/cores to use. Leave blank or set to 0 to use the maximum available in the system.",
       "optional": true,
       "type": "integer"
     },
     "mem_mb": {
-      "description": "Maximum memory to use (MB)",
+      "description": "Maximum memory to use (MB). Leave blank or set to 0 to use the maximum available in the system.",
       "default": 10240,
       "type": "integer"
     },
