@@ -55,12 +55,12 @@ def set_mem_gb(mem_gb):
     log.info("psutil.virtual_memory().available= {:5.2f} GiB".format(psutil_mem_gb))
     if mem_gb:
         if mem_gb > psutil_mem_gb:
-            log.warning("mem_gb > number available, using max %d", psutil_mem_gb)
+            log.warning("mem_gb > number available, using max %d GiB", psutil_mem_gb)
             mem_gb = psutil_mem_gb
         else:
-            log.info("mem_gb using %d from config", mem_gb)
+            log.info("mem_gb using %d GiB from config", mem_gb)
     else:  # Default is to use all memory available
         mem_gb = psutil_mem_gb
-        log.info("using mem_gb = %d (maximum available)", psutil_mem_gb)
+        log.info("using mem_gb = %d GiB (maximum available)", psutil_mem_gb)
 
     return mem_gb
