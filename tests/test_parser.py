@@ -7,6 +7,12 @@ from flywheel_gear_toolkit import GearToolkitContext
 
 from fw_gear_bids_qsiprep.parser import parse_config
 
+# Desired custom manifest values we need to parse:
+desired_manifest_custom_values = {
+    "bids-app-binary": "my_bids_app",
+    "analysis-level": "medium_rare",
+}
+
 # Some config keys we want in the gear_options and app_options:
 desired_gear_options = {
     "gear-dry-run": True,
@@ -36,6 +42,8 @@ def test_parse_config(tmpdir):
             for key, value in my_dict.items():
                 gear_context.config[key] = value
 
+        gear_context.manifest = {"custom": desired_manifest_custom_values}
+
         # To test that we limit the number of cpus correctly:
         gear_context.config["n_cpus"] = 100
 
@@ -46,6 +54,8 @@ def test_parse_config(tmpdir):
         ###   run the checks:   ###
 
         # Check that we get all that we expected and only what we expected:
+        for desired_key, desired_value in desired_manifest_custom_values.items():
+            assert gear_opt[desired_key] == desired_value
         for desired_key, desired_value in desired_gear_options.items():
             # For the gear options, "gear-" should be removed from the key:
             expected_key = desired_key.split("gear-")[1]

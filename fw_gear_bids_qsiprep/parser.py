@@ -24,6 +24,8 @@ def parse_config(
     """   Gear config   """
 
     gear_options = {
+        "bids-app-binary": gear_context.manifest.get("custom").get("bids-app-binary"),
+        "analysis-level": gear_context.manifest.get("custom").get("analysis-level"),
         "ignore-bids-errors": gear_context.config.get("gear-ignore-bids-errors"),
         "run-bids-validation": gear_context.config.get("gear-run-bids-validation"),
         "save-intermediate-output": gear_context.config.get(
@@ -69,12 +71,12 @@ def parse_config(
     * dwi-only: ADDED
     * infant: ADDED
     * boilerplate: ADDED
-    * verbose: SKIPPED handled by template
+    * verbose: ADDED
     * ignore: SKIPPED handled by template
     * longitudinal: ADDED
     * b0-threshold: ADDED
     * dwi-denoise-window: ADDED
-    * denoise-method: 
+    * denoise-method:
     * unringing-method: ADDED
     * dwi-no-biascorr: ADDED
     * no-b0-harmonization: ADDED
@@ -120,6 +122,7 @@ def parse_config(
         "dwi-only",
         "infant",
         "boilerplate",
+        "verbose",
         "longitudinal",
         "b0-threshold",
         "dwi_denoise_window",

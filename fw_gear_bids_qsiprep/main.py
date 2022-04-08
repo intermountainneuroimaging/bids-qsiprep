@@ -1,9 +1,75 @@
 """Main module."""
 
 import logging
+from pathlib import Path
 from typing import List, Tuple
 
+from flywheel_gear_toolkit.interfaces.command_line import build_command_list
+
 log = logging.getLogger(__name__)
+
+
+def generate_command(
+    gear_options: dict,
+    app_options: dict,
+    output_dir: Path,
+    errors: List[str],
+    warnings: List[str],
+) -> List[str]:
+    """Build the main command line command to run.
+
+    Args:
+        gear_options (dict): options for the gear, from config.json
+        app_options (dict): options for the app, from config.json
+        output_dir (path): directory where output will be saved
+        errors (list of str): error messages
+        warnings (list of str): warning messages
+    Returns:
+        cmd (list of str): command to execute
+    """
+
+    # Common to all BIDS Apps (https://github.com/BIDS-Apps), start with the command itself and the
+    # 3 positional args: bids path, output dir, analysis-level ("participant"/"group")
+    # This should be done here in case there are nargs='*' arguments
+    # (PV: Not sure if this is the case anymore. Their template seems to
+    # suggest so, but not the general documentation.)
+    cmd = [
+        str(gear_options["bids-app-binary"]),
+        str(gear_options["work-dir"] / "bids"),
+        str(output_dir),
+        str(gear_options["analysis-level"]),
+    ]
+
+    # get app parameters and pass them to the command
+    command_parameters = {}
+
+    for key, val in app_options.items():
+
+        # these arguments are passed directly to the command as is
+        if key == "bids_app_args" and val:
+            bids_app_args = val.split(" ")
+            # append this list to the cmd:
+            cmd.extend(bids_app_args)
+
+        else:
+            command_parameters[key] = val
+
+    # check to see if we need to skip the bids-validation:
+    if not gear_options["run-bids-validation"]:
+        command_parameters["skip-bids-validation"] = True
+
+    cmd = build_command_list(cmd, command_parameters)
+
+    # when there are spaces in an element of the list, it means that the argument is a space-separated
+    # list, so take out the "=" separating the argument from the value. e.g.:
+    #     "--foo=bar fam" -> "--foo bar fam"
+    # this allows argparse "nargs" to work properly
+    for ii, cc in enumerate(cmd):
+        if " " in cc:
+            cmd[ii] = cc.replace("=", " ")
+
+    log.info("command is: %s", str(cmd))
+    return cmd
 
 
 def prepare(
