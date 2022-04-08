@@ -17,10 +17,6 @@ from fw_gear_bids_qsiprep.parser import parse_config
 # when the container runs. The run.py file then imports the rest of the gear as a
 # module.
 
-GEAR = "bids-qsiprep"
-REPO = "flywheel-apps"
-CONTAINER = f"{REPO}/{GEAR}]"
-
 log = logging.getLogger(__name__)
 
 BIDS_APP = "qsiprep"
@@ -115,7 +111,10 @@ def main(context: GearToolkitContext) -> None:
         warnings=warnings,
     )
 
-    log.info("%s Gear is done.  Returning %s", CONTAINER, e_code)
+    gear_builder = context.manifest.get("custom").get("gear-builder")
+    # gear_builder.get("image") should be something like: flywheel/bids-qsiprep:0.0.1_0.15.1
+    container = gear_builder.get("image").split(":")[0]
+    log.info("%s Gear is done.  Returning %s", container, e_code)
 
     # Exit the python script (and thus the container) with the exit
     # code returned by fw_gear_bids_qsiprep.main.run function.

@@ -48,7 +48,11 @@ def test_post_run():
 def test_main():
     """Unit tests for main"""
 
-    mocked_context = MagicMock(spec=run.GearToolkitContext, manifest={"name": "test"})
+    mocked_manifest = {
+        "name": "test",
+        "custom": {"gear-builder": {"image": "foo/bar:v1.0"}},
+    }
+    mocked_context = MagicMock(spec=run.GearToolkitContext, manifest=mocked_manifest)
     mocked_parse_config_return = (False, mocked_gear_options, {})
 
     run.parse_config = MagicMock(return_value=(False, [], []))
