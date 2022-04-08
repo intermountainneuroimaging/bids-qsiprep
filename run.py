@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import List, Tuple
 
 from flywheel_gear_toolkit import GearToolkitContext
+from flywheel_gear_toolkit.licenses.freesurfer import install_freesurfer_license
 
 # This design with the main interfaces separated from a gear module (with main and parser)
 # allows the gear module to be publishable, so it can then be imported in another project,
@@ -20,6 +21,11 @@ from fw_gear_bids_qsiprep.parser import parse_config
 log = logging.getLogger(__name__)
 
 BIDS_APP = "qsiprep"
+
+# where the app expects the FS license
+# TO-DO: the app expects it in ${FREESURFER_HOME}/license.txt, so we should be
+#    reading the variable FREESURFER_HOME from the gear_environ.json
+FREESURFER_LICENSE = "/opt/freesurfer/license.txt"
 
 
 def get_bids_data(
@@ -82,6 +88,16 @@ def main(context: GearToolkitContext) -> None:
     # Call the fw_gear_bids_qsiprep.parser.parse_config function
     # to extract the args, kwargs from the context (e.g. config.json).
     debug, gear_options, app_options = parse_config(context)
+
+    # TO-DO: install_freesurfer_license from the gear_toolkit takes the gear context as an argument,
+    #    so it is only valid for FW instances. However, the functionality of taking a FreeSurfer
+    #    license (either string or file) and copying it to wherever your app expects it should be
+    #    the same whether you run it on FW, or XNAT or HPC or locally.
+    #    In the future, it would be great to have a "instance-independent" install_freesurfer_license
+    #    and have a "instance-dependent" function to extract the license from the context.
+    #    At that point, we could extract the license e.g. in the parser, and this function can be moved
+    #    to fw_gear_bids_qsiprep.main
+    install_freesurfer_license(context, FREESURFER_LICENSE)
 
     command, prepare_errors, prepare_warnings = prepare(
         gear_options=gear_options,

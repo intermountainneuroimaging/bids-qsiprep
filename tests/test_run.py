@@ -56,6 +56,7 @@ def test_main():
     mocked_parse_config_return = (False, mocked_gear_options, {})
 
     run.parse_config = MagicMock(return_value=(False, [], []))
+    run.install_freesurfer_license = MagicMock()
     run.prepare = MagicMock(return_value=(f"command", [], []))
     run.get_bids_data = MagicMock(return_value=(f"foo", []))
     run.run = MagicMock(return_value=0)
@@ -64,4 +65,4 @@ def test_main():
     with pytest.raises(SystemExit):
         run.main(mocked_context)
 
-    pass
+    run.install_freesurfer_license.assert_called_once()
