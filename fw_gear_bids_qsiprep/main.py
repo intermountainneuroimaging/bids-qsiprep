@@ -16,6 +16,8 @@ def generate_command(
 ) -> List[str]:
     """Build the main command line command to run.
 
+    This method should be the same for FW and XNAT instances. It is also BIDS-App generic.
+
     Args:
         gear_options (dict): options for the gear, from config.json
         app_options (dict): options for the app, from config.json
