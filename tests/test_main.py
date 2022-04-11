@@ -37,8 +37,6 @@ def test_generate_command(run_bids_validation, bids_app_args):
         gear_options,
         app_options,
         output_analysis_id_dir,
-        errors=[],
-        warnings=[],
     )
 
     # Check that the returned cmd:
@@ -95,8 +93,6 @@ def test_generate_command_space_separated_argument():
         gear_options,
         app_options,
         output_analysis_id_dir,
-        errors=[],
-        warnings=[],
     )
 
     # Check that all app_options are in the cmd:
@@ -110,10 +106,6 @@ def test_generate_command_space_separated_argument():
 def test_prepare():
     """Unit tests for prepare"""
 
-    mocked_gear_options = {
-        "LastName": "Bourne",
-        "FirstName": "Jason",
-    }
     app_options = {}
 
     expected_command = []

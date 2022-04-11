@@ -13,8 +13,6 @@ def generate_command(
     gear_options: dict,
     app_options: dict,
     output_dir: Path,
-    errors: List[str],
-    warnings: List[str],
 ) -> List[str]:
     """Build the main command line command to run.
 
@@ -22,8 +20,6 @@ def generate_command(
         gear_options (dict): options for the gear, from config.json
         app_options (dict): options for the app, from config.json
         output_dir (path): directory where output will be saved
-        errors (list of str): error messages
-        warnings (list of str): warning messages
     Returns:
         cmd (list of str): command to execute
     """
