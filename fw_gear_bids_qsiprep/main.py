@@ -91,11 +91,15 @@ def prepare(
         warnings (list[str]): list of generated warnings
     """
 
-    # TO-DO:
-    # -install_freesurfer_license
-    # -generate_command
+    output_analysis_id_dir = Path(gear_options["output-dir"]) / Path(
+        gear_options["destination-id"]
+    )
 
-    command = []
+    command = generate_command(
+        gear_options, app_options, output_dir=output_analysis_id_dir
+    )
+
+    # for now, no errors or warnings, but leave this in place to allow future methods to return an error
     errors = []
     warnings = []
 
