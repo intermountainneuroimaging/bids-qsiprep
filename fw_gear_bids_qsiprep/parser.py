@@ -25,6 +25,9 @@ def parse_config(
 
     gear_options = {
         "bids-app-binary": gear_context.manifest.get("custom").get("bids-app-binary"),
+        "bids-app-modalities": gear_context.manifest.get("custom").get(
+            "bids-app-modalities"
+        ),
         "analysis-level": gear_context.manifest.get("custom").get("analysis-level"),
         "ignore-bids-errors": gear_context.config.get("gear-ignore-bids-errors"),
         "run-bids-validation": gear_context.config.get("gear-run-bids-validation"),

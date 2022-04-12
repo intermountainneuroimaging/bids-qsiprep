@@ -7,9 +7,10 @@ from flywheel_gear_toolkit import GearToolkitContext
 
 from fw_gear_bids_qsiprep.parser import parse_config
 
-# Desired custom manifest values we need to parse:
+# Desired custom manifest values we need to parse, because the gear makes use of them:
 desired_manifest_custom_values = {
     "bids-app-binary": "my_bids_app",
+    "bids-app-modalities": ["modality1", "modality2", "modality3"],
     "analysis-level": "medium_rare",
 }
 
