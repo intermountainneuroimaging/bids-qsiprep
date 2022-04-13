@@ -332,7 +332,7 @@
   },
   "custom": {
     "analysis-level": "participant",
-    "bids-app-command": "qsiprep",
+    "bids-app-binary": "qsiprep",
     "bids-app-modalities": [
       "anat",
       "dwi",
