@@ -80,7 +80,7 @@ def main(context: GearToolkitContext) -> None:
     #    to fw_gear_bids_qsiprep.main
     install_freesurfer_license(context, FREESURFER_LICENSE)
 
-    command, prepare_errors, prepare_warnings = prepare(
+    prepare_errors, prepare_warnings = prepare(
         gear_options=gear_options,
         app_options=app_options,
     )

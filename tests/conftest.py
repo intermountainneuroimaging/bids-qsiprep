@@ -8,8 +8,11 @@ import pytest
 @pytest.fixture
 def mocked_gear_options():
     return {
+        "bids-app-binary": "f00_binary",
         "bids-app-modalities": ["foo", "bar"],
         "dry-run": False,
+        "output-dir": "classified",
+        "destination-id": "also_classified",
     }
 
 

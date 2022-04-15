@@ -73,12 +73,11 @@ def generate_command(
 def prepare(
     gear_options: dict,
     app_options: dict,
-) -> Tuple[List[str], List[str], List[str]]:
+) -> Tuple[List[str], List[str]]:
     """Prepare everything for the algorithm run.
 
     It should:
      - Install FreeSurfer license (if needed)
-     - Generate the command that will run the main application
 
     Same for FW and RL instances.
     Potentially, this could be BIDS-App independent?
@@ -88,24 +87,15 @@ def prepare(
         app_options (Dict): options for the app
 
     Returns:
-        command (list[str]): command generated, as a list of str
         errors (list[str]): list of generated errors
         warnings (list[str]): list of generated warnings
     """
-
-    output_analysis_id_dir = Path(gear_options["output-dir"]) / Path(
-        gear_options["destination-id"]
-    )
-
-    command = generate_command(
-        gear_options, app_options, output_dir=output_analysis_id_dir
-    )
 
     # for now, no errors or warnings, but leave this in place to allow future methods to return an error
     errors = []
     warnings = []
 
-    return command, errors, warnings
+    return errors, warnings
 
 
 def run(gear_options: dict, app_options: dict) -> int:
@@ -119,6 +109,16 @@ def run(gear_options: dict, app_options: dict) -> int:
         run_error: any error encountered running the app. (0: no error)
     """
     log.info("This is the beginning of the run file")
+
+    output_analysis_id_dir = Path(gear_options["output-dir"]) / Path(
+        gear_options["destination-id"]
+    )
+
+    command = generate_command(
+        gear_options, app_options, output_dir=output_analysis_id_dir
+    )
+
+    # placeholder for the "execute command"
 
     run_error = 0
 

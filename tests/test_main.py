@@ -6,13 +6,6 @@ import pytest
 
 from fw_gear_bids_qsiprep import main
 
-mocked_gear_options = {
-    "LastName": "Bourne",
-    "FirstName": "Jason",
-    "output-dir": "classified",
-    "destination-id": "also_classified",
-}
-
 
 # Test 2x2 use cases:
 # - run_bids_validation = True/None
@@ -106,28 +99,26 @@ def test_generate_command_space_separated_argument():
             assert f"--{key}={val}" in cmd
 
 
-def test_prepare():
+def test_prepare(mocked_gear_options):
     """Unit tests for prepare"""
 
     app_options = {}
 
-    expected_command = ["expected", "command"]
     expected_errors = []
     expected_warnings = []
-    main.generate_command = MagicMock(return_value=expected_command)
 
-    my_command, errors, warnings = main.prepare(mocked_gear_options, app_options)
+    errors, warnings = main.prepare(mocked_gear_options, app_options)
 
-    # by checking this, we make sure that after "generate_command" is called, prepare doesn't
-    # modify the command:
-    assert my_command == expected_command
     assert errors == expected_errors
     assert warnings == expected_warnings
 
 
-def test_run():
+def test_run(mocked_gear_options):
     """Unit tests for run"""
 
-    exit_code = main.run([], [])
+    main.generate_command = MagicMock()
 
+    exit_code = main.run(mocked_gear_options, {})
+
+    main.generate_command.assert_called_once()
     assert exit_code == 0
