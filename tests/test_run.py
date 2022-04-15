@@ -29,22 +29,6 @@ def test_get_bids_data():
     assert errors == expected_errors
 
 
-def test_post_run():
-
-    """Unit tests for post_run"""
-
-    run.post_run(
-        gear_name=f"foo",
-        gear_options=mocked_gear_options,
-        analysis_output_dir=Path(f"bar"),
-        run_label=f"fum",
-        errors=[],
-        warnings=[],
-    )
-
-    pass
-
-
 def test_main():
     """Unit tests for main"""
 

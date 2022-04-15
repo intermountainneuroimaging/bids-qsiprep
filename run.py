@@ -13,6 +13,7 @@ from flywheel_gear_toolkit.licenses.freesurfer import install_freesurfer_license
 # which enables chaining multiple gears together.
 from fw_gear_bids_qsiprep.main import prepare, run
 from fw_gear_bids_qsiprep.parser import parse_config
+from fw_gear_bids_qsiprep.post import post_run
 
 # The gear is split up into 2 main components. The run.py file which is executed
 # when the container runs. The run.py file then imports the rest of the gear as a
@@ -54,26 +55,6 @@ def get_bids_data(
     errors = []
 
     return run_label, errors
-
-
-def post_run(
-    gear_name: str,
-    gear_options: dict,
-    analysis_output_dir: Path,
-    run_label: str,
-    errors: List[str],
-    warnings: List[str],
-):
-    """Move all the results to the final destination, write out any
-    metadata, clean-up, etc.
-
-    Different for FW and RL instances
-    Parts might be BIDS-App specific (the results), parts will be common
-    (reporting errors, clean-up, etc.)
-    """
-
-    # do nothing, for now
-    pass
 
 
 def main(context: GearToolkitContext) -> None:
