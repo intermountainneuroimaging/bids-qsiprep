@@ -331,6 +331,13 @@
     }
   },
   "custom": {
+    "analysis-level": "participant",
+    "bids-app-binary": "qsiprep",
+    "bids-app-modalities": [
+      "anat",
+      "dwi",
+      "fmap"
+    ],
     "docker-image": "flywheel/bids-qsiprep:0.0.1_0.15.1",
     "flywheel": {
       "suite": "BIDS Apps"

@@ -7,13 +7,8 @@ from flywheel_gear_toolkit import GearToolkitContext
 
 import run
 
-mocked_gear_options = {
-    "LastName": "Bourne",
-    "FirstName": "Jason",
-}
 
-
-def test_get_bids_data():
+def test_get_bids_data(mocked_gear_options):
     """Unit tests for get_bids_data"""
 
     mocked_context = MagicMock(spec=GearToolkitContext)
@@ -29,23 +24,7 @@ def test_get_bids_data():
     assert errors == expected_errors
 
 
-def test_post_run():
-
-    """Unit tests for post_run"""
-
-    run.post_run(
-        gear_name=f"foo",
-        gear_options=mocked_gear_options,
-        analysis_output_dir=Path(f"bar"),
-        run_label=f"fum",
-        errors=[],
-        warnings=[],
-    )
-
-    pass
-
-
-def test_main():
+def test_main(mocked_gear_options):
     """Unit tests for main"""
 
     mocked_manifest = {
@@ -55,8 +34,9 @@ def test_main():
     mocked_context = MagicMock(spec=run.GearToolkitContext, manifest=mocked_manifest)
     mocked_parse_config_return = (False, mocked_gear_options, {})
 
-    run.parse_config = MagicMock(return_value=(False, [], []))
-    run.prepare = MagicMock(return_value=(f"command", [], []))
+    run.parse_config = MagicMock(return_value=mocked_parse_config_return)
+    run.install_freesurfer_license = MagicMock()
+    run.prepare = MagicMock(return_value=([], []))
     run.get_bids_data = MagicMock(return_value=(f"foo", []))
     run.run = MagicMock(return_value=0)
     run.post_run = MagicMock()
@@ -64,4 +44,4 @@ def test_main():
     with pytest.raises(SystemExit):
         run.main(mocked_context)
 
-    pass
+    run.install_freesurfer_license.assert_called_once()
