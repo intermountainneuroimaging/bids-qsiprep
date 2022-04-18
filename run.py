@@ -84,15 +84,15 @@ def main(context: GearToolkitContext) -> None:
         gear_options=gear_options,
         app_options=app_options,
     )
-    errors.append(prepare_errors)
-    warnings.append(prepare_warnings)
+    errors += prepare_errors
+    warnings += prepare_warnings
 
     run_label, get_bids_errors = get_bids_data(
         context=context,
         gear_options=gear_options,
         tree_title=f"BIDS-QSIPrep",
     )
-    errors.append(get_bids_errors)
+    errors += get_bids_errors
 
     # Pass the args, kwargs to fw_gear_qsiprep.main.run function to execute
     # the main functionality of the gear.
