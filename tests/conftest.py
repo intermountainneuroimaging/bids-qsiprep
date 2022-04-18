@@ -13,6 +13,8 @@ def mocked_gear_options():
         "dry-run": False,
         "output-dir": "classified",
         "destination-id": "also_classified",
+        "run-bids-validation": False,
+        "ignore-bids-errors": False,
     }
 
 
