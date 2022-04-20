@@ -9,6 +9,7 @@ from flywheel_bids.utils.download_run_level import download_bids_for_runlevel
 from flywheel_bids.utils.run_level import get_analysis_run_level_and_hierarchy
 from flywheel_gear_toolkit import GearToolkitContext
 from flywheel_gear_toolkit.licenses.freesurfer import install_freesurfer_license
+from flywheel_gear_toolkit.utils.file import sanitize_filename
 
 # This design with the main interfaces separated from a gear module (with main and parser)
 # allows the gear module to be publishable, so it can then be imported in another project,
@@ -63,8 +64,8 @@ def get_bids_data(
 
     # This is the label of the project, subject or session and is used
     # as part of the name of the output files.
-    # TO-DO: make_file_name_safe (run_label)
     run_label = hierarchy["run_label"]
+    run_label = sanitize_filename(run_label)
 
     # Create HTML file that shows BIDS "Tree" like output
     tree = True
@@ -116,11 +117,10 @@ def main(context: GearToolkitContext) -> None:
     warnings += prepare_warnings
 
     if len(errors) == 0:
-        # TO-DO: make_file_name_safe (gear_options['bids-app-binary'])
         run_label, get_bids_errors = get_bids_data(
             context=context,
             gear_options=gear_options,
-            tree_title=f"{gear_options['bids-app-binary']} BIDS Tree",
+            tree_title=f"{sanitize_filename(gear_options['bids-app-binary'])} BIDS Tree",
         )
         errors += get_bids_errors
     else:

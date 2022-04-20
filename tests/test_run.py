@@ -20,9 +20,12 @@ def test_get_bids_data(mocked_gear_options, download_bids_for_runlevel_error):
         destination={"id": mocked_gear_options["destination-id"]},
     )
 
-    expected_run_label = "foo_label"
+    base_run_label = "foo_label"
+    # introduce a forbidden character ("*") to make sure it gets sanitized:
+    invalid_run_label = base_run_label + "*"
+    expected_run_label = base_run_label + "star"
     run.get_analysis_run_level_and_hierarchy = MagicMock(
-        return_value={"run_label": expected_run_label}
+        return_value={"run_label": invalid_run_label}
     )
     download_bids_for_runlevel_return_value = 0
     expected_errors = []
