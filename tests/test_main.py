@@ -128,7 +128,6 @@ def test_run(tmpdir, mocked_gear_options):
     main.generate_command.assert_called_once()
 
     # TO-DO: - finish tests for main.run
-    #        - write tests for utils.dry_run
     #        - write tests for utils.environment
     #        - write test for main.run with dry-run
     #        - write test for case main.run gives an error
