@@ -8,20 +8,43 @@ from flywheel_gear_toolkit import GearToolkitContext
 import run
 
 
-def test_get_bids_data(mocked_gear_options):
+# Test 2 use cases:
+# - download_bids_for_runlevel returns an error: True/None
+@pytest.mark.parametrize("download_bids_for_runlevel_error", [True, False])
+def test_get_bids_data(mocked_gear_options, download_bids_for_runlevel_error):
     """Unit tests for get_bids_data"""
 
-    mocked_context = MagicMock(spec=GearToolkitContext)
+    mocked_context = MagicMock(
+        spec=GearToolkitContext,
+        client="",
+        destination={"id": mocked_gear_options["destination-id"]},
+    )
 
-    expected_run_label = f"foo"
+    base_run_label = "foo_label"
+    # introduce a forbidden character ("*") to make sure it gets sanitized:
+    invalid_run_label = base_run_label + "*"
+    expected_run_label = base_run_label + "star"
+    run.get_analysis_run_level_and_hierarchy = MagicMock(
+        return_value={"run_label": invalid_run_label}
+    )
+    download_bids_for_runlevel_return_value = 0
     expected_errors = []
+    if download_bids_for_runlevel_error:
+        download_bids_for_runlevel_return_value = 1
+        expected_errors = ["BIDS Error(s) detected"]
+
+    run.download_bids_for_runlevel = MagicMock(
+        return_value=download_bids_for_runlevel_return_value
+    )
 
     run_label, errors = run.get_bids_data(
-        mocked_context, mocked_gear_options, f"my_tree_title"
+        mocked_context, mocked_gear_options, "my_tree_title"
     )
 
     assert run_label == expected_run_label
     assert errors == expected_errors
+    run.get_analysis_run_level_and_hierarchy.assert_called_once()
+    run.download_bids_for_runlevel.assert_called_once()
 
 
 def test_main(mocked_gear_options):

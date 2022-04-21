@@ -5,8 +5,11 @@ import sys
 from pathlib import Path
 from typing import List, Tuple
 
+from flywheel_bids.utils.download_run_level import download_bids_for_runlevel
+from flywheel_bids.utils.run_level import get_analysis_run_level_and_hierarchy
 from flywheel_gear_toolkit import GearToolkitContext
 from flywheel_gear_toolkit.licenses.freesurfer import install_freesurfer_license
+from flywheel_gear_toolkit.utils.file import sanitize_filename
 
 # This design with the main interfaces separated from a gear module (with main and parser)
 # allows the gear module to be publishable, so it can then be imported in another project,
@@ -51,8 +54,34 @@ def get_bids_data(
         errors (list[str]): list of generated errors
     """
 
-    run_label = f"foo"
     errors = []
+
+    # Given the destination container, figure out if running at the project,
+    # subject, or session level.
+    hierarchy = get_analysis_run_level_and_hierarchy(
+        context.client, context.destination["id"]
+    )
+
+    # This is the label of the project, subject or session and is used
+    # as part of the name of the output files.
+    run_label = hierarchy["run_label"]
+    run_label = sanitize_filename(run_label)
+
+    # Create HTML file that shows BIDS "Tree" like output
+    tree = True
+
+    error_code = download_bids_for_runlevel(
+        context,
+        hierarchy,
+        tree=tree,
+        tree_title=tree_title,
+        src_data=False,
+        folders=gear_options["bids-app-modalities"],
+        dry_run=gear_options["dry-run"],
+        do_validate_bids=gear_options["run-bids-validation"],
+    )
+    if error_code > 0 and not gear_options["ignore-bids-errors"]:
+        errors.append("BIDS Error(s) detected")
 
     return run_label, errors
 
@@ -84,15 +113,20 @@ def main(context: GearToolkitContext) -> None:
         gear_options=gear_options,
         app_options=app_options,
     )
-    errors.append(prepare_errors)
-    warnings.append(prepare_warnings)
+    errors += prepare_errors
+    warnings += prepare_warnings
 
-    run_label, get_bids_errors = get_bids_data(
-        context=context,
-        gear_options=gear_options,
-        tree_title=f"BIDS-QSIPrep",
-    )
-    errors.append(get_bids_errors)
+    if len(errors) == 0:
+        run_label, get_bids_errors = get_bids_data(
+            context=context,
+            gear_options=gear_options,
+            tree_title=f"{sanitize_filename(gear_options['bids-app-binary'])} BIDS Tree",
+        )
+        errors += get_bids_errors
+    else:
+        run_label = "error"
+        log.info("Did not download BIDS because of previous errors")
+        print(errors)
 
     # Pass the args, kwargs to fw_gear_qsiprep.main.run function to execute
     # the main functionality of the gear.
