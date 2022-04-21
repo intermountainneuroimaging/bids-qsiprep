@@ -15,6 +15,9 @@ def make_dirs_and_files(files: List[Union[str, Path]]) -> None:
         files: paths to files to be created
     """
     for ff in files:
+        if not isinstance(ff, str):
+            ff = str(ff)
+
         if os.path.exists(ff):
             log.debug("Exists: " + ff)
         else:
