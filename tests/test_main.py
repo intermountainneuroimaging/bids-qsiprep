@@ -113,12 +113,23 @@ def test_prepare(mocked_gear_options):
     assert warnings == expected_warnings
 
 
-def test_run(mocked_gear_options):
+def test_run(tmpdir, mocked_gear_options):
     """Unit tests for run"""
 
     main.generate_command = MagicMock()
+    main.get_and_log_environment = MagicMock()
+
+    # main.run attempts to create the "destination-id" folder, so need to modify the default one:
+    foo_gear_options = mocked_gear_options
+    foo_gear_options["destination-id"] = tmpdir / foo_gear_options["destination-id"]
 
     exit_code = main.run(mocked_gear_options, {})
 
     main.generate_command.assert_called_once()
+
+    # TO-DO: - finish tests for main.run
+    #        - write tests for utils.dry_run
+    #        - write tests for utils.environment
+    #        - write test for main.run with dry-run
+    #        - write test for case main.run gives an error
     assert exit_code == 0

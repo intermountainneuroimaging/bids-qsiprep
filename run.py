@@ -17,6 +17,7 @@ from flywheel_gear_toolkit.utils.file import sanitize_filename
 from fw_gear_bids_qsiprep.main import prepare, run
 from fw_gear_bids_qsiprep.parser import parse_config
 from fw_gear_bids_qsiprep.post import post_run
+from utils.dry_run import pretend_it_ran
 
 # The gear is split up into 2 main components. The run.py file which is executed
 # when the container runs. The run.py file then imports the rest of the gear as a
@@ -128,19 +129,38 @@ def main(context: GearToolkitContext) -> None:
         log.info("Did not download BIDS because of previous errors")
         print(errors)
 
-    # Pass the args, kwargs to fw_gear_qsiprep.main.run function to execute
-    # the main functionality of the gear.
-    e_code = run(gear_options, app_options)
+    if len(errors) > 0:
+        e_code = 1
+        log.info("Command was NOT run because of previous errors.")
 
-    # Cleanup, move all results to the output directory
-    post_run(
-        gear_name=context.manifest["name"],
-        gear_options=gear_options,
-        analysis_output_dir=f"output_analysis_placeholder",
-        run_label=run_label,
-        errors=errors,
-        warnings=warnings,
-    )
+    elif gear_options["dry-run"]:
+        e = "gear-dry-run is set: Command was NOT run."
+        log.warning(e)
+        warnings.append(e)
+        pretend_it_ran(gear_options["destination-id"])
+
+    else:
+        try:
+            # Pass the args, kwargs to fw_gear_qsiprep.main.run function to execute
+            # the main functionality of the gear.
+            e_code = run(gear_options, app_options)
+
+        except RuntimeError as exc:
+            e_code = 1
+            errors.append(exc)
+            log.critical(exc)
+            log.exception("Unable to execute command.")
+
+        finally:
+            # Cleanup, move all results to the output directory
+            post_run(
+                gear_name=context.manifest["name"],
+                gear_options=gear_options,
+                analysis_output_dir=f"output_analysis_placeholder",
+                run_label=run_label,
+                errors=errors,
+                warnings=warnings,
+            )
 
     gear_builder = context.manifest.get("custom").get("gear-builder")
     # gear_builder.get("image") should be something like: flywheel/bids-qsiprep:0.0.1_0.15.1
