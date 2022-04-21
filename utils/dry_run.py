@@ -3,15 +3,16 @@
 import logging
 import os
 from pathlib import Path
+from typing import List, Union
 
 log = logging.getLogger(__name__)
 
 
-def make_dirs_and_files(files):
+def make_dirs_and_files(files: List[Union[str, Path]]) -> None:
     """Create directories and touch files.
 
     Args:
-        files (list of str) paths to files to be created
+        files: paths to files to be created
     """
     for ff in files:
         if os.path.exists(ff):
@@ -23,7 +24,7 @@ def make_dirs_and_files(files):
             Path(ff).touch(mode=0o777, exist_ok=True)
 
 
-def pretend_it_ran(destination_id):
+def pretend_it_ran(destination_id: str) -> None:
     """Make some output like the command would have done only fake.
 
     Args:
