@@ -11,14 +11,10 @@ import run
 # Test 2 use cases:
 # - download_bids_for_runlevel returns an error: True/None
 @pytest.mark.parametrize("download_bids_for_runlevel_error", [True, False])
-def test_get_bids_data(mocked_gear_options, download_bids_for_runlevel_error):
+def test_get_bids_data(
+    mocked_context, mocked_gear_options, download_bids_for_runlevel_error
+):
     """Unit tests for get_bids_data"""
-
-    mocked_context = MagicMock(
-        spec=GearToolkitContext,
-        client="",
-        destination={"id": mocked_gear_options["destination-id"]},
-    )
 
     base_run_label = "foo_label"
     # introduce a forbidden character ("*") to make sure it gets sanitized:
@@ -47,14 +43,9 @@ def test_get_bids_data(mocked_gear_options, download_bids_for_runlevel_error):
     run.download_bids_for_runlevel.assert_called_once()
 
 
-def test_main(mocked_gear_options):
+def test_main(mocked_gear_options, mocked_context):
     """Unit tests for main"""
 
-    mocked_manifest = {
-        "name": "test",
-        "custom": {"gear-builder": {"image": "foo/bar:v1.0"}},
-    }
-    mocked_context = MagicMock(spec=run.GearToolkitContext, manifest=mocked_manifest)
     mocked_parse_config_return = (False, mocked_gear_options, {})
 
     run.parse_config = MagicMock(return_value=mocked_parse_config_return)
