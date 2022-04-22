@@ -1,5 +1,5 @@
 """Module to test run.py"""
-from pathlib import Path
+import logging
 from unittest.mock import MagicMock
 
 import pytest
@@ -43,19 +43,62 @@ def test_get_bids_data(
     run.download_bids_for_runlevel.assert_called_once()
 
 
-def test_main(mocked_gear_options, mocked_context):
+# Test 4 use cases:
+# - errors: None/prepare_errors/get_bids_data_errors/run_errors
+@pytest.mark.parametrize(
+    "errors", [None, "prepare_errors", "get_bids_data_errors", "run_errors"]
+)
+def test_main(caplog, mocked_gear_options, mocked_context, errors):
     """Unit tests for main"""
+
+    logging.getLogger(__name__)
+    caplog.set_level(logging.INFO)
 
     mocked_parse_config_return = (False, mocked_gear_options, {})
 
     run.parse_config = MagicMock(return_value=mocked_parse_config_return)
     run.install_freesurfer_license = MagicMock()
-    run.prepare = MagicMock(return_value=([], []))
-    run.get_bids_data = MagicMock(return_value=(f"foo", []))
-    run.run = MagicMock(return_value=0)
+    if errors == "prepare_errors":
+        run.prepare = MagicMock(return_value=([errors], []))
+    else:
+        run.prepare = MagicMock(return_value=([], []))
+
+    if errors == "get_bids_data_errors":
+        run.get_bids_data = MagicMock(return_value=(f"foo", [errors]))
+    else:
+        run.get_bids_data = MagicMock(return_value=(f"foo", []))
+
+    if errors == "run_errors":
+        run.run = MagicMock(side_effect=RuntimeError(errors))
+    else:
+        run.run = MagicMock(return_value=0)
+
     run.post_run = MagicMock()
 
     with pytest.raises(SystemExit):
         run.main(mocked_context)
 
     run.install_freesurfer_license.assert_called_once()
+    run.prepare.assert_called_once()
+
+    if errors is None:
+        run.get_bids_data.assert_called_once()
+        run.run.assert_called_once()
+        run.post_run.assert_called_once()
+
+    elif errors == "prepare_errors":
+        run.get_bids_data.assert_not_called()
+        run.run.assert_not_called()
+        run.post_run.assert_not_called()
+        assert ["Command was NOT run" in l.message for l in caplog.records]
+
+    elif errors == "get_bids_data_errors":
+        run.get_bids_data.assert_called_once()
+        run.run.assert_not_called()
+        run.post_run.assert_not_called()
+
+    elif errors == "run_errors":
+        run.get_bids_data.assert_called_once()
+        run.run.assert_called_once()
+        run.post_run.assert_called_once()
+        assert [l.levelno == logging.CRITICAL for l in caplog.records]
