@@ -125,7 +125,7 @@ def run(gear_options: dict, app_options: dict) -> int:
 
     # Create output directory
     log.info("Creating output directory %s", output_analysis_id_dir)
-    Path(output_analysis_id_dir).mkdir()
+    Path(output_analysis_id_dir).mkdir(parents=True)
 
     environ = get_and_log_environment()
 
