@@ -6,9 +6,6 @@ FROM python:3.8.10-slim-buster as base
 
 LABEL maintainer="support@flywheel.io"
 
-# Save docker environ here to keep it separate from the Flywheel gear environment
-RUN python -c 'import os, json; f = open("/tmp/gear_environ.json", "w"); json.dump(dict(os.environ), f)'
-
 ENV FLYWHEEL="/flywheel/v0"
 WORKDIR ${FLYWHEEL}
 

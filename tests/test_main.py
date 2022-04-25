@@ -128,7 +128,6 @@ def test_run(tmpdir, caplog, mocked_gear_options, dry_run, main_command):
 
     my_cmd = [main_command, "Foo"]
     main.generate_command = MagicMock(return_value=my_cmd)
-    main.get_and_log_environment = MagicMock(return_value={})
 
     # main.run attempts to create the "destination-id" folder, so need to modify the default one:
     foo_gear_options = mocked_gear_options
@@ -147,7 +146,6 @@ def test_run(tmpdir, caplog, mocked_gear_options, dry_run, main_command):
     # The following only runs for the cases in which errors are not expected:
     assert exit_code == 0
     main.generate_command.assert_called_once()
-    main.get_and_log_environment.assert_called_once()
     assert os.path.exists(
         Path(foo_gear_options["output-dir"]) / Path(foo_gear_options["destination-id"])
     )

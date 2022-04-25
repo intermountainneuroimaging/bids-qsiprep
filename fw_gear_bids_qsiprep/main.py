@@ -9,8 +9,6 @@ from flywheel_gear_toolkit.interfaces.command_line import (
     exec_command,
 )
 
-from utils.fly.environment import get_and_log_environment
-
 log = logging.getLogger(__name__)
 
 
@@ -127,12 +125,9 @@ def run(gear_options: dict, app_options: dict) -> int:
     log.info("Creating output directory %s", output_analysis_id_dir)
     Path(output_analysis_id_dir).mkdir(parents=True)
 
-    environ = get_and_log_environment()
-
     # This is what it is all about
     exec_command(
         command,
-        environ=environ,
         dry_run=gear_options["dry-run"],
         shell=True,
         cont_output=True,
