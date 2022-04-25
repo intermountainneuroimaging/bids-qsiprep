@@ -4,7 +4,10 @@ import logging
 from pathlib import Path
 from typing import List, Tuple
 
-from flywheel_gear_toolkit.interfaces.command_line import build_command_list
+from flywheel_gear_toolkit.interfaces.command_line import (
+    build_command_list,
+    exec_command,
+)
 
 log = logging.getLogger(__name__)
 
@@ -118,7 +121,17 @@ def run(gear_options: dict, app_options: dict) -> int:
         gear_options, app_options, output_dir=output_analysis_id_dir
     )
 
-    # placeholder for the "execute command"
+    # Create output directory
+    log.info("Creating output directory %s", output_analysis_id_dir)
+    Path(output_analysis_id_dir).mkdir(parents=True)
+
+    # This is what it is all about
+    exec_command(
+        command,
+        dry_run=gear_options["dry-run"],
+        shell=True,
+        cont_output=True,
+    )
 
     run_error = 0
 

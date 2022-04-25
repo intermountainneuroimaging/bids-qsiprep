@@ -2,7 +2,10 @@
 Set up parameters for testing. Picked up by pytest automatically.
 """
 
+from unittest.mock import MagicMock
+
 import pytest
+from flywheel_gear_toolkit import GearToolkitContext
 
 
 @pytest.fixture
@@ -18,22 +21,20 @@ def mocked_gear_options():
     }
 
 
-"""
-from unittest.mock import MagicMock
-
-
-
 @pytest.fixture
-def mock_context(mocker):
-    mocker.patch("flywheel_gear_toolkit.GearToolkitContext")
-    gtk = MagicMock(
-        autospec=True,
-        config={
-            "gear-ignore-bids-errors": True,
-        },
+def mocked_context(mocked_gear_options):
+    """Return a mocked GearToolkitContext"""
+    mocked_manifest = {
+        "name": "test",
+        "custom": {"gear-builder": {"image": "foo/bar:v1.0"}},
+    }
+    return MagicMock(
+        spec=GearToolkitContext,
+        manifest=mocked_manifest,
+        client="",
+        destination={"id": mocked_gear_options["destination-id"]},
     )
-    return gtk
-"""
+
 
 """
 @pytest.fixture

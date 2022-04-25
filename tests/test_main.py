@@ -1,4 +1,6 @@
 """Module to test main.py"""
+import logging
+import os.path
 from pathlib import Path
 from unittest.mock import MagicMock
 
@@ -113,12 +115,43 @@ def test_prepare(mocked_gear_options):
     assert warnings == expected_warnings
 
 
-def test_run(mocked_gear_options):
+# Test 2x2 use cases:
+# - dry_run = True/False
+@pytest.mark.parametrize("dry_run", [True, False])
+# - main_command = "echo" / "ohce"  ; this checks what happens if exec_command returns an error
+@pytest.mark.parametrize("main_command", ["echo", "ohce"])
+def test_run(tmpdir, caplog, mocked_gear_options, dry_run, main_command):
     """Unit tests for run"""
 
-    main.generate_command = MagicMock()
+    logging.getLogger(__name__)
+    caplog.set_level(logging.INFO)
 
-    exit_code = main.run(mocked_gear_options, {})
+    my_cmd = [main_command, "Foo"]
+    main.generate_command = MagicMock(return_value=my_cmd)
 
-    main.generate_command.assert_called_once()
+    # main.run attempts to create the "destination-id" folder, so need to modify the default one:
+    foo_gear_options = mocked_gear_options
+    foo_gear_options["output-dir"] = tmpdir / foo_gear_options["output-dir"]
+    if dry_run:
+        foo_gear_options["dry-run"] = True
+
+    if main_command == "ohce" and not dry_run:
+        with pytest.raises(RuntimeError):
+            exit_code = main.run(mocked_gear_options, {})
+            assert exit_code > 0
+        return
+    else:
+        exit_code = main.run(mocked_gear_options, {})
+
+    # The following only runs for the cases in which errors are not expected:
     assert exit_code == 0
+    main.generate_command.assert_called_once()
+    assert os.path.exists(
+        Path(foo_gear_options["output-dir"]) / Path(foo_gear_options["destination-id"])
+    )
+    # Check that there is a record in the log saying "Executing command" followed by my_cmd.
+    # This shows that "exec_command" was run with the expected command.
+    executing_command_lines = [
+        l.message for l in caplog.records if "Executing command" in l.message
+    ]
+    assert [" ".join(my_cmd) in l for l in executing_command_lines]
