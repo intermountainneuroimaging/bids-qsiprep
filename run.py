@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """The run script"""
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import List, Tuple
@@ -26,11 +27,6 @@ from utils.dry_run import pretend_it_ran
 log = logging.getLogger(__name__)
 
 BIDS_APP = "qsiprep"
-
-# where the app expects the FS license
-# TO-DO: the app expects it in ${FREESURFER_HOME}/license.txt, so we should be
-#    reading the variable FREESURFER_HOME from the gear_environ.json
-FREESURFER_LICENSE = "/opt/freesurfer/license.txt"
 
 
 def get_bids_data(
@@ -108,7 +104,9 @@ def main(context: GearToolkitContext) -> None:
     #    and have a "instance-dependent" function to extract the license from the context.
     #    At that point, we could extract the license e.g. in the parser, and this function can be moved
     #    to fw_gear_bids_qsiprep.main
-    install_freesurfer_license(context, FREESURFER_LICENSE)
+    install_freesurfer_license(
+        context, Path(os.environ["FREESURFER_HOME"]) / "license.txt"
+    )
 
     prepare_errors, prepare_warnings = prepare(
         gear_options=gear_options,
