@@ -28,6 +28,10 @@ log = logging.getLogger(__name__)
 
 BIDS_APP = "qsiprep"
 
+# Default/fall-back folder for the FS license (in case ${FREESURFER_HOME} is not defined
+# in the environment:
+FREESURFER_HOME = "/opt/freesurfer"
+
 
 def get_bids_data(
     context: GearToolkitContext,
@@ -105,7 +109,8 @@ def main(context: GearToolkitContext) -> None:
     #    At that point, we could extract the license e.g. in the parser, and this function can be moved
     #    to fw_gear_bids_qsiprep.main
     install_freesurfer_license(
-        context, Path(os.environ["FREESURFER_HOME"]) / "license.txt"
+        context,
+        Path(os.environ.get("FREESURFER_HOME", FREESURFER_HOME)) / "license.txt",
     )
 
     prepare_errors, prepare_warnings = prepare(
