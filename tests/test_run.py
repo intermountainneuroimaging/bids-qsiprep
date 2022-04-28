@@ -1,5 +1,6 @@
 """Module to test run.py"""
 import logging
+import os
 from unittest.mock import MagicMock
 
 import pytest
@@ -41,6 +42,79 @@ def test_get_bids_data(
     assert errors == expected_errors
     run.get_analysis_run_level_and_hierarchy.assert_called_once()
     run.download_bids_for_runlevel.assert_called_once()
+
+
+# Test 2x2 use cases:
+# - save_intermediate_output: True/False
+@pytest.mark.parametrize("save_intermediate_output", [True, False])
+# - keep_output: True/False
+@pytest.mark.parametrize("keep_output", [True, False])
+def test_post_run(
+    tmpdir, caplog, mocked_gear_options, save_intermediate_output, keep_output
+):
+    """Test the post_run method"""
+
+    logging.getLogger(__name__)
+    caplog.set_level(logging.INFO)
+
+    this_gear_options = mocked_gear_options
+    this_gear_options["save-intermediate-output"] = save_intermediate_output
+    this_gear_options["keep-output"] = keep_output
+    this_gear_options["work-dir"] = "work"
+    this_gear_options["intermediate-files"] = ""
+    this_gear_options["intermediate-folders"] = ""
+
+    gear_name = "Mocked_gear"
+    analysis_output_dir = tmpdir / "mocked_outdir"
+    mocked_errors = ["error 1", "error 2", "error 3"]
+    mocked_warnings = ["warning 1", "warning 2"]
+
+    # make analysis_output_dir (to later check if it was removed)
+    os.mkdir(analysis_output_dir)
+
+    run.zip_output = MagicMock()
+    run.zip_htmls = MagicMock()
+    run.zip_all_intermediate_output = MagicMock()
+    run.zip_intermediate_selected = MagicMock()
+
+    run.post_run(
+        gear_name,
+        this_gear_options,
+        analysis_output_dir,
+        "mocked_run_label",
+        mocked_errors,
+        mocked_warnings,
+    )
+
+    run.zip_output.assert_called_once()
+    run.zip_htmls.assert_called_once()
+    run.zip_intermediate_selected.assert_called_once()
+    if save_intermediate_output:
+        run.zip_all_intermediate_output.assert_called_once()
+    else:
+        run.zip_all_intermediate_output.assert_not_called()
+
+    if keep_output:
+        assert os.path.isdir(analysis_output_dir)
+        assert "NOT removing output directory" in caplog.text
+    else:
+        assert not os.path.isdir(analysis_output_dir)
+
+    # Make sure there is a "Previous warnings" entry in the log, with a list of the mocked_warnings:
+    assert ["Previous warnings" in l.message for l in caplog.records]
+    warning_log_entry = [
+        l.message for l in caplog.records if "Previous warnings" in l.message
+    ][0]
+    for e in mocked_warnings:
+        assert e in warning_log_entry
+
+    # Make sure there is a "Previous errors" entry in the log, with a list of the mocked_errors:
+    assert ["Previous errors" in l.message for l in caplog.records]
+    error_log_entry = [
+        l.message for l in caplog.records if "Previous errors" in l.message
+    ][0]
+    for e in mocked_errors:
+        assert e in error_log_entry
 
 
 # Test 4 use cases:

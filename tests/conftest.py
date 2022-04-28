@@ -34,12 +34,3 @@ def mocked_context(mocked_gear_options):
         client="",
         destination={"id": mocked_gear_options["destination-id"]},
     )
-
-
-"""
-@pytest.fixture
-def common_mocks(mocker):
-    mock_get = mocker.patch("flywheel_gear_toolkit.GearToolkitContext.config.get")
-
-    return mock_get
-"""
