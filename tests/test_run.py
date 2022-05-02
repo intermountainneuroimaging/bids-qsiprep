@@ -175,13 +175,17 @@ def test_main(caplog, mocked_gear_options, mocked_context, errors):
     elif errors == "prepare_errors":
         run.get_bids_data.assert_not_called()
         run.run.assert_not_called()
-        run.post_run.assert_not_called()
+        # when prepare throws an error, we still want to run the `post_run` to return any
+        # intermediate files, which might help find what the error was.
+        run.post_run.assert_called()
         assert ["Command was NOT run" in l.message for l in caplog.records]
 
     elif errors == "get_bids_data_errors":
         run.get_bids_data.assert_called_once()
         run.run.assert_not_called()
-        run.post_run.assert_not_called()
+        # when get_bids_data throws an error, we still want to run the `post_run` to return any
+        # intermediate files, which might help find what the error was.
+        run.post_run.assert_called()
 
     elif errors == "run_errors":
         run.get_bids_data.assert_called_once()

@@ -258,20 +258,20 @@ def main(context: GearToolkitContext) -> None:
             # pinpoint what the exact problem was. So we have `post_run` under "finally"
             save_metadata = True
 
-        finally:
-            output_analysis_id_dir = Path(gear_options["output-dir"]) / Path(
-                gear_options["destination-id"]
-            )
-            # Cleanup, move all results to the output directory
-            # It will be run even in the event of an error, so that the partial results are available for debugging.
-            post_run(
-                gear_name=context.manifest["name"],
-                gear_options=gear_options,
-                analysis_output_dir=output_analysis_id_dir,
-                run_label=run_label,
-                errors=errors,
-                warnings=warnings,
-            )
+    # post_run should be run regardless of dry-run or exit code.
+    output_analysis_id_dir = Path(gear_options["output-dir"]) / Path(
+        gear_options["destination-id"]
+    )
+    # Cleanup, move all results to the output directory
+    # It will be run even in the event of an error, so that the partial results are available for debugging.
+    post_run(
+        gear_name=context.manifest["name"],
+        gear_options=gear_options,
+        analysis_output_dir=output_analysis_id_dir,
+        run_label=run_label,
+        errors=errors,
+        warnings=warnings,
+    )
 
     gear_builder = context.manifest.get("custom").get("gear-builder")
     # gear_builder.get("image") should be something like: flywheel/bids-qsiprep:0.0.1_0.15.1
