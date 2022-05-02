@@ -116,6 +116,7 @@ def post_run(
 
     # zip entire output/<analysis_id> folder into
     #  <gear_name>_<project|subject|session label>_<analysis.id>.zip
+    run_label = sanitize_filename(run_label)
     zip_file_name = f"{gear_name}_{run_label}_{gear_options['destination-id']}.zip"
     zip_output(
         str(gear_options["output-dir"]),

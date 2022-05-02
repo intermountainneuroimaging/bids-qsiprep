@@ -57,6 +57,11 @@ def test_post_run(
     logging.getLogger(__name__)
     caplog.set_level(logging.INFO)
 
+    base_run_label = "foo_label"
+    # introduce a forbidden character ("*") to make sure it gets sanitized:
+    invalid_run_label = base_run_label + "*"
+    expected_run_label = base_run_label + "star"
+
     this_gear_options = mocked_gear_options
     this_gear_options["save-intermediate-output"] = save_intermediate_output
     this_gear_options["keep-output"] = keep_output
@@ -81,12 +86,19 @@ def test_post_run(
         gear_name,
         this_gear_options,
         analysis_output_dir,
-        "mocked_run_label",
+        invalid_run_label,
         mocked_errors,
         mocked_warnings,
     )
 
-    run.zip_output.assert_called_once()
+    # by checking the arguments for the run.zip_output call we check that run.post_run sanitizes the run_label:
+    run.zip_output.assert_called_once_with(
+        str(this_gear_options["output-dir"]),
+        this_gear_options["destination-id"],
+        f"{gear_name}_{expected_run_label}_{this_gear_options['destination-id']}.zip",
+        dry_run=False,
+        exclude_files=None,
+    )
     run.zip_htmls.assert_called_once()
     run.zip_intermediate_selected.assert_called_once()
     if save_intermediate_output:
