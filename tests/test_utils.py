@@ -33,5 +33,5 @@ def test_pretend_it_ran(tmpdir):
 
     dry_run.pretend_it_ran(destination_id)
 
-    assert [op.exists(ef) for f in expected_folders]
+    assert [op.exists(ef) for ef in expected_folders]
     assert op.exists(op.join("output", destination_id, "somedir", "sub-TOME3024.html"))
