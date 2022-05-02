@@ -1,6 +1,6 @@
 """Module to test parser.py"""
 
-import json
+import logging
 from os import path as op
 from os import symlink
 
@@ -20,10 +20,15 @@ def test_make_dirs_and_files(tmpdir):
     assert [op.exists(f) for f in files]
 
 
-def test_pretend_it_ran(tmpdir):
+def test_pretend_it_ran(tmpdir, caplog, mocked_gear_options):
     """Tests for pretend_it_ran"""
 
-    destination_id = "foo"
+    logging.getLogger(__name__)
+    caplog.set_level(logging.INFO)
+
+    mocked_gear_options["dry-run"] = True
+
+    mocked_app_options = {"foo": "bar"}
 
     # pretend_it_ran will create the folders "work" and "output" in the WORKDIR (/flywheel/v0).
     # So the files created there are deleted after running the test, link those folders to "tmpdir"
@@ -31,7 +36,16 @@ def test_pretend_it_ran(tmpdir):
     for ef in expected_folders:
         symlink(ef, tmpdir / ef)
 
-    dry_run.pretend_it_ran(destination_id)
+    dry_run.pretend_it_ran(mocked_gear_options, mocked_app_options)
 
+    for msg in ["Executing command", "Creating fake output"]:
+        assert [msg in caplog.messages]
     assert [op.exists(ef) for ef in expected_folders]
-    assert op.exists(op.join("output", destination_id, "somedir", "sub-TOME3024.html"))
+    assert op.exists(
+        op.join(
+            "output",
+            mocked_gear_options["destination-id"],
+            "somedir",
+            "sub-TOME3024.html",
+        )
+    )

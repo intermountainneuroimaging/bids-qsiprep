@@ -5,6 +5,8 @@ import os
 from pathlib import Path
 from typing import List, Union
 
+from fw_gear_bids_qsiprep.main import run
+
 log = logging.getLogger(__name__)
 
 
@@ -27,13 +29,19 @@ def make_dirs_and_files(files: List[Union[str, Path]]) -> None:
             Path(ff).touch(mode=0o777, exist_ok=True)
 
 
-def pretend_it_ran(destination_id: str) -> None:
+def pretend_it_ran(gear_options: dict, app_options: dict) -> None:
     """Make some output like the command would have done only fake.
 
     Args:
-        destination_id (str) ID of destination container
+        gear_options: dict with gear-specific options
+        app_options: dict with options for the BIDS-App
     """
 
+    # 1) Call run.
+    #    Because gear_options["dry-run"] is True, run.exec_command will log the call, but will not run.
+    run(gear_options, app_options)
+
+    # 2) Recreate the expected output:
     path = Path("work")
 
     log.info("Creating fake output in " + str(path))
@@ -51,7 +59,7 @@ def pretend_it_ran(destination_id: str) -> None:
     make_dirs_and_files(files)
 
     # Output directory
-    path = Path("output") / Path(destination_id)
+    path = Path("output") / Path(gear_options["destination-id"])
 
     log.info("Creating fake output in " + str(path))
 
