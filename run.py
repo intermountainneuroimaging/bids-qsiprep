@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from typing import List, Tuple, Union
 
+from flywheel_bids.results.zip_htmls import zip_htmls
 from flywheel_bids.results.zip_intermediate import (
     zip_all_intermediate_output,
     zip_intermediate_selected,
