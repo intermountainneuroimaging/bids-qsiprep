@@ -232,10 +232,11 @@ def main(context: GearToolkitContext) -> None:
         log.info("Command was NOT run because of previous errors.")
 
     elif gear_options["dry-run"]:
+        e_code = 0
+        pretend_it_ran(gear_options, app_options)
         e = "gear-dry-run is set: Command was NOT run."
         log.warning(e)
         warnings.append(e)
-        pretend_it_ran(gear_options["destination-id"])
 
     else:
         try:
