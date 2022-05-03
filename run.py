@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from typing import List, Tuple, Union
 
+from flywheel_bids.results.zip_htmls import zip_htmls
 from flywheel_bids.results.zip_intermediate import (
     zip_all_intermediate_output,
     zip_intermediate_selected,
@@ -115,6 +116,7 @@ def post_run(
 
     # zip entire output/<analysis_id> folder into
     #  <gear_name>_<project|subject|session label>_<analysis.id>.zip
+    run_label = sanitize_filename(run_label)
     zip_file_name = f"{gear_name}_{run_label}_{gear_options['destination-id']}.zip"
     zip_output(
         str(gear_options["output-dir"]),
@@ -231,10 +233,11 @@ def main(context: GearToolkitContext) -> None:
         log.info("Command was NOT run because of previous errors.")
 
     elif gear_options["dry-run"]:
+        e_code = 0
+        pretend_it_ran(gear_options, app_options)
         e = "gear-dry-run is set: Command was NOT run."
         log.warning(e)
         warnings.append(e)
-        pretend_it_ran(gear_options["destination-id"])
 
     else:
         try:
@@ -255,20 +258,20 @@ def main(context: GearToolkitContext) -> None:
             # pinpoint what the exact problem was. So we have `post_run` under "finally"
             save_metadata = True
 
-        finally:
-            output_analysis_id_dir = Path(gear_options["output-dir"]) / Path(
-                gear_options["destination-id"]
-            )
-            # Cleanup, move all results to the output directory
-            # It will be run even in the event of an error, so that the partial results are available for debugging.
-            post_run(
-                gear_name=context.manifest["name"],
-                gear_options=gear_options,
-                analysis_output_dir=output_analysis_id_dir,
-                run_label=run_label,
-                errors=errors,
-                warnings=warnings,
-            )
+    # post_run should be run regardless of dry-run or exit code.
+    output_analysis_id_dir = Path(gear_options["output-dir"]) / Path(
+        gear_options["destination-id"]
+    )
+    # Cleanup, move all results to the output directory
+    # It will be run even in the event of an error, so that the partial results are available for debugging.
+    post_run(
+        gear_name=context.manifest["name"],
+        gear_options=gear_options,
+        analysis_output_dir=output_analysis_id_dir,
+        run_label=run_label,
+        errors=errors,
+        warnings=warnings,
+    )
 
     gear_builder = context.manifest.get("custom").get("gear-builder")
     # gear_builder.get("image") should be something like: flywheel/bids-qsiprep:0.0.1_0.15.1

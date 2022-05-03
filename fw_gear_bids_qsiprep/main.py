@@ -61,12 +61,18 @@ def generate_command(
 
     cmd = build_command_list(cmd, command_parameters)
 
-    # when there are spaces in an element of the list, it means that the argument is a space-separated
-    # list, so take out the "=" separating the argument from the value. e.g.:
-    #     "--foo=bar fam" -> "--foo bar fam"
-    # this allows argparse "nargs" to work properly
     for ii, cc in enumerate(cmd):
-        if " " in cc:
+        if cc.startswith("--verbose"):
+            # The app takes a "-v/--verbose" boolean flag (either present or not), while the config
+            # verbose argument would be "--verbose=v".
+            # So replace "--verbose=<v|vv|vvv>' with '-<v|vv|vvv>':
+            cmd[ii] = "-" + cc.split("=")[1]
+
+        elif " " in cc:
+            # When there are spaces in an element of the list, it means that the argument is a space-separated
+            # list, so take out the "=" separating the argument from the value. e.g.:
+            #     "--foo=bar fam" -> "--foo bar fam"
+            # this allows argparse "nargs" to work properly
             cmd[ii] = cc.replace("=", " ")
 
     log.info("command is: %s", str(cmd))
