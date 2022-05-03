@@ -8,6 +8,9 @@ from flywheel_gear_toolkit import GearToolkitContext
 
 import run
 
+MOCKED_RUN_LABEL = "foo_label"
+MOCKED_HIERARCHY = {"run_label": MOCKED_RUN_LABEL}
+
 
 # Test 2 use cases:
 # - download_bids_for_runlevel returns an error: True/None
@@ -17,13 +20,7 @@ def test_get_bids_data(
 ):
     """Unit tests for get_bids_data"""
 
-    base_run_label = "foo_label"
-    # introduce a forbidden character ("*") to make sure it gets sanitized:
-    invalid_run_label = base_run_label + "*"
-    expected_run_label = base_run_label + "star"
-    run.get_analysis_run_level_and_hierarchy = MagicMock(
-        return_value={"run_label": invalid_run_label}
-    )
+    run.get_analysis_run_level_and_hierarchy = MagicMock(return_value=MOCKED_HIERARCHY)
     download_bids_for_runlevel_return_value = 0
     expected_errors = []
     if download_bids_for_runlevel_error:
@@ -34,11 +31,11 @@ def test_get_bids_data(
         return_value=download_bids_for_runlevel_return_value
     )
 
-    run_label, errors = run.get_bids_data(
+    hierarchy, errors = run.get_bids_data(
         mocked_context, mocked_gear_options, "my_tree_title"
     )
 
-    assert run_label == expected_run_label
+    assert hierarchy == MOCKED_HIERARCHY
     assert errors == expected_errors
     run.get_analysis_run_level_and_hierarchy.assert_called_once()
     run.download_bids_for_runlevel.assert_called_once()
@@ -57,10 +54,9 @@ def test_post_run(
     logging.getLogger(__name__)
     caplog.set_level(logging.INFO)
 
-    base_run_label = "foo_label"
     # introduce a forbidden character ("*") to make sure it gets sanitized:
-    invalid_run_label = base_run_label + "*"
-    expected_run_label = base_run_label + "star"
+    invalid_run_label = MOCKED_RUN_LABEL + "*"
+    expected_run_label = MOCKED_RUN_LABEL + "star"
 
     this_gear_options = mocked_gear_options
     this_gear_options["save-intermediate-output"] = save_intermediate_output
@@ -150,9 +146,9 @@ def test_main(caplog, mocked_gear_options, mocked_context, errors):
         run.prepare = MagicMock(return_value=([], []))
 
     if errors == "get_bids_data_errors":
-        run.get_bids_data = MagicMock(return_value=(f"foo", [errors]))
+        run.get_bids_data = MagicMock(return_value=(MOCKED_HIERARCHY, [errors]))
     else:
-        run.get_bids_data = MagicMock(return_value=(f"foo", []))
+        run.get_bids_data = MagicMock(return_value=(MOCKED_HIERARCHY, []))
 
     if errors == "run_errors":
         run.run = MagicMock(side_effect=RuntimeError(errors))

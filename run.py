@@ -44,8 +44,8 @@ def get_bids_data(
     context: GearToolkitContext,
     gear_options: dict,
     tree_title: str,
-) -> Tuple[str, List[str]]:
-    """Get the data in BIDS structure.
+) -> Tuple[dict, List[str]]:
+    """Get the data in BIDS structure and return the hierarchy of the destination container
     It returns any error found downloading the BIDS data
 
     For FW gears, it downloads the data
@@ -53,13 +53,13 @@ def get_bids_data(
     It should be independent of the specific BIDS-App
 
     Args:
-        context (GearToolkitContext): gear context
-        gear_options (Dict): gear options
-        tree_title (str): title for the BIDS tree
+        context: gear context
+        gear_options: gear options
+        tree_title: title for the BIDS tree
 
     Returns:
-        run_label (str): run label
-        errors (list[str]): list of generated errors
+        hierarchy: FW hierarchy of the destination container.
+        errors: list of generated errors
     """
 
     errors = []
@@ -69,11 +69,6 @@ def get_bids_data(
     hierarchy = get_analysis_run_level_and_hierarchy(
         context.client, context.destination["id"]
     )
-
-    # This is the label of the project, subject or session and is used
-    # as part of the name of the output files.
-    run_label = hierarchy["run_label"]
-    run_label = sanitize_filename(run_label)
 
     # Create HTML file that shows BIDS "Tree" like output
     tree = True
@@ -91,7 +86,7 @@ def get_bids_data(
     if error_code > 0 and not gear_options["ignore-bids-errors"]:
         errors.append("BIDS Error(s) detected")
 
-    return run_label, errors
+    return hierarchy, errors
 
 
 def post_run(
@@ -217,14 +212,14 @@ def main(context: GearToolkitContext) -> None:
     warnings += prepare_warnings
 
     if len(errors) == 0:
-        run_label, get_bids_errors = get_bids_data(
+        hierarchy, get_bids_errors = get_bids_data(
             context=context,
             gear_options=gear_options,
             tree_title=f"{sanitize_filename(gear_options['bids-app-binary'])} BIDS Tree",
         )
         errors += get_bids_errors
     else:
-        run_label = "error"
+        hierarchy = {"run_label": "error"}
         log.info("Did not download BIDS because of previous errors")
         print(errors)
 
@@ -268,7 +263,7 @@ def main(context: GearToolkitContext) -> None:
         gear_name=context.manifest["name"],
         gear_options=gear_options,
         analysis_output_dir=output_analysis_id_dir,
-        run_label=run_label,
+        run_label=hierarchy["run_label"],
         errors=errors,
         warnings=warnings,
     )
