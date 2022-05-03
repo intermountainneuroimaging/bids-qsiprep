@@ -218,6 +218,21 @@ def main(context: GearToolkitContext) -> None:
             tree_title=f"{sanitize_filename(gear_options['bids-app-binary'])} BIDS Tree",
         )
         errors += get_bids_errors
+
+        # For BIDS-App that run at the participant level, set the "participant_label" (if not set in the options).
+        # This can only be done once the hierarchy is available (to know the subject label):
+        if (
+            gear_options["analysis-level"] == "participant"
+            and not app_options["participant_label"]
+        ):
+            app_options["participant_label"] = hierarchy["subject_label"]
+
+        # In general, BIDS-Apps take only the (subject) label, without the "sub-" part:
+        if app_options["participant_label"].startswith("sub-"):
+            # Write this in two instructions because if you write it in on, Black will format it horribly:
+            new_participant_label = app_options["participant_label"][len("sub-") :]
+            app_options["participant_label"] = new_participant_label
+
     else:
         hierarchy = {"run_label": "error"}
         log.info("Did not download BIDS because of previous errors")

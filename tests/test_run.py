@@ -9,7 +9,11 @@ from flywheel_gear_toolkit import GearToolkitContext
 import run
 
 MOCKED_RUN_LABEL = "foo_label"
-MOCKED_HIERARCHY = {"run_label": MOCKED_RUN_LABEL}
+MOCKED_SUBJECT_LABEL = "sub-Mocked"
+MOCKED_HIERARCHY = {
+    "run_label": MOCKED_RUN_LABEL,
+    "subject_label": MOCKED_SUBJECT_LABEL,
+}
 
 
 # Test 2 use cases:
@@ -136,7 +140,12 @@ def test_main(caplog, mocked_gear_options, mocked_context, errors):
     logging.getLogger(__name__)
     caplog.set_level(logging.INFO)
 
-    mocked_parse_config_return = (False, mocked_gear_options, {})
+    mocked_gear_options["analysis-level"] = "participant"
+    mocked_app_options = {"participant_label": ""}
+    mocked_parse_config_return = (False, mocked_gear_options, mocked_app_options)
+
+    # We expect 'main' to get the subject label from the hierarchy, and strip the "sub-" prefix:
+    expected_app_options = {"participant_label": MOCKED_SUBJECT_LABEL[len("sub-") :]}
 
     run.parse_config = MagicMock(return_value=mocked_parse_config_return)
     run.install_freesurfer_license = MagicMock()
@@ -165,7 +174,7 @@ def test_main(caplog, mocked_gear_options, mocked_context, errors):
 
     if errors is None:
         run.get_bids_data.assert_called_once()
-        run.run.assert_called_once()
+        run.run.assert_called_once_with(mocked_gear_options, expected_app_options)
         run.post_run.assert_called_once()
 
     elif errors == "prepare_errors":
