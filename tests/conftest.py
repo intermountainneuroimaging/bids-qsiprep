@@ -2,8 +2,10 @@
 Set up parameters for testing. Picked up by pytest automatically.
 """
 
+import json
 import shutil
 from pathlib import Path
+from unittest import TestCase
 from unittest.mock import MagicMock
 
 import pytest
@@ -93,5 +95,23 @@ def search_caplog_contains():
                 if contains_me in msg:
                     return True
         return False
+
+    return _method
+
+
+@pytest.fixture
+def check_for_fw_key():
+    def _method(user_json):
+        """Check that there is a $HOME/.config/flywheel/user.json file, and that
+        it contains a "key" entry (for FW's API)"""
+
+        if not user_json.exists():
+            TestCase.skipTest("", f"{str(user_json)} file not found.")
+
+        # Check API key is present:
+        with open(user_json, "r") as f:
+            j = json.load(f)
+        if "key" not in j or not j["key"]:
+            TestCase.skipTest("", f"No API key available in {str(user_json)}")
 
     return _method
