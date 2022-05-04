@@ -81,3 +81,17 @@ def install_gear_results():
         # "subjects" directory and "license.txt" file.
 
     return _method
+
+
+@pytest.fixture
+def search_caplog_contains():
+    def _method(caplog, find_me, contains_me=""):
+        """Search caplog message for find_me, return true if it contains contains_me"""
+
+        for msg in caplog.messages:
+            if find_me in msg:
+                if contains_me in msg:
+                    return True
+        return False
+
+    return _method
