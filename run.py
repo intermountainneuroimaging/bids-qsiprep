@@ -44,22 +44,24 @@ def get_bids_data(
     context: GearToolkitContext,
     gear_options: dict,
     tree_title: str,
-) -> Tuple[dict, List[str]]:
-    """Get the data in BIDS structure and return the hierarchy of the destination container
-    It returns any error found downloading the BIDS data
+) -> Tuple[str, str, List[str]]:
+    """Get the data in BIDS structure and return the subject_label and
+    run_label corresponding to the destination container.
+    It also returns any error found downloading the BIDS data.
 
     For FW gears, it downloads the data
     For RL containers, it just points/links to the storage folder
     It should be independent of the specific BIDS-App
 
     Args:
-        context: gear context
-        gear_options: gear options
-        tree_title: title for the BIDS tree
+        context (GearToolkitContext): gear context
+        gear_options (Dict): gear options
+        tree_title (str): title for the BIDS tree
 
     Returns:
-        hierarchy: FW hierarchy of the destination container.
-        errors: list of generated errors
+        subject_label (str): FW subject_label, (from the hierarchy of the destination container)
+        run_label (str): FW run_label, (from the hierarchy of the destination container)
+        errors (list[str]): list of generated errors
     """
 
     errors = []
@@ -69,6 +71,11 @@ def get_bids_data(
     hierarchy = get_analysis_run_level_and_hierarchy(
         context.client, context.destination["id"]
     )
+
+    # This is the label of the project, subject or session and is used
+    # as part of the name of the output files.
+    run_label = hierarchy["run_label"]
+    run_label = sanitize_filename(run_label)
 
     # Create HTML file that shows BIDS "Tree" like output
     tree = True
@@ -86,7 +93,7 @@ def get_bids_data(
     if error_code > 0 and not gear_options["ignore-bids-errors"]:
         errors.append("BIDS Error(s) detected")
 
-    return hierarchy, errors
+    return hierarchy["subject_label"], run_label, errors
 
 
 def post_run(
@@ -101,17 +108,16 @@ def post_run(
     metadata, clean-up
 
     Args:
-        gear_name: gear name, used in the output file names
-        gear_options: gear options
-        analysis_output_dir: name of the output dir
-        run_label: run label (project|subject|session label)
-        errors: list of errors found
-        warnings: list of warnings found
+        gear_name (str): gear name, used in the output file names
+        gear_options (dict): gear options
+        analysis_output_dir (str or Path): name of the output dir
+        run_label (str): run label (project|subject|session label)
+        errors (list[str]): list of errors found
+        warnings (list[str]): list of warnings found
     """
 
     # zip entire output/<analysis_id> folder into
     #  <gear_name>_<project|subject|session label>_<analysis.id>.zip
-    run_label = sanitize_filename(run_label)
     zip_file_name = f"{gear_name}_{run_label}_{gear_options['destination-id']}.zip"
     zip_output(
         str(gear_options["output-dir"]),
@@ -212,20 +218,19 @@ def main(context: GearToolkitContext) -> None:
     warnings += prepare_warnings
 
     if len(errors) == 0:
-        hierarchy, get_bids_errors = get_bids_data(
+        subject_label, run_label, get_bids_errors = get_bids_data(
             context=context,
             gear_options=gear_options,
             tree_title=f"{sanitize_filename(gear_options['bids-app-binary'])} BIDS Tree",
         )
         errors += get_bids_errors
 
-        # For BIDS-App that run at the participant level, set the "participant_label" (if not set in the options).
-        # This can only be done once the hierarchy is available (to know the subject label):
+        # For BIDS-Apps that run at the participant level, set the "participant_label" (if not set in the options).
         if (
             gear_options["analysis-level"] == "participant"
             and not app_options["participant_label"]
         ):
-            app_options["participant_label"] = hierarchy["subject_label"]
+            app_options["participant_label"] = subject_label
 
         # In general, BIDS-Apps take only the (subject) label, without the "sub-" part:
         if app_options["participant_label"].startswith("sub-"):
@@ -234,7 +239,7 @@ def main(context: GearToolkitContext) -> None:
             app_options["participant_label"] = new_participant_label
 
     else:
-        hierarchy = {"run_label": "error"}
+        run_label = "error"
         log.info("Did not download BIDS because of previous errors")
         print(errors)
 
@@ -278,7 +283,7 @@ def main(context: GearToolkitContext) -> None:
         gear_name=context.manifest["name"],
         gear_options=gear_options,
         analysis_output_dir=output_analysis_id_dir,
-        run_label=hierarchy["run_label"],
+        run_label=run_label,
         errors=errors,
         warnings=warnings,
     )

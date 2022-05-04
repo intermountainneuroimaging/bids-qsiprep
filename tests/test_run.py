@@ -10,10 +10,6 @@ import run
 
 MOCKED_RUN_LABEL = "foo_label"
 MOCKED_SUBJECT_LABEL = "sub-Mocked"
-MOCKED_HIERARCHY = {
-    "run_label": MOCKED_RUN_LABEL,
-    "subject_label": MOCKED_SUBJECT_LABEL,
-}
 
 
 # Test 2 use cases:
@@ -24,7 +20,14 @@ def test_get_bids_data(
 ):
     """Unit tests for get_bids_data"""
 
-    run.get_analysis_run_level_and_hierarchy = MagicMock(return_value=MOCKED_HIERARCHY)
+    # introduce a forbidden character ("*") to make sure it gets sanitized:
+    invalid_run_label = MOCKED_RUN_LABEL + "*"
+    expected_run_label = MOCKED_RUN_LABEL + "star"
+    mocked_hierarchy = {
+        "run_label": invalid_run_label,
+        "subject_label": MOCKED_SUBJECT_LABEL,
+    }
+    run.get_analysis_run_level_and_hierarchy = MagicMock(return_value=mocked_hierarchy)
     download_bids_for_runlevel_return_value = 0
     expected_errors = []
     if download_bids_for_runlevel_error:
@@ -35,11 +38,13 @@ def test_get_bids_data(
         return_value=download_bids_for_runlevel_return_value
     )
 
-    hierarchy, errors = run.get_bids_data(
+    subject_label, run_label, errors = run.get_bids_data(
         mocked_context, mocked_gear_options, "my_tree_title"
     )
 
-    assert hierarchy == MOCKED_HIERARCHY
+    assert subject_label == MOCKED_SUBJECT_LABEL
+    # check that the run_label gets sanitized
+    assert run_label == expected_run_label
     assert errors == expected_errors
     run.get_analysis_run_level_and_hierarchy.assert_called_once()
     run.download_bids_for_runlevel.assert_called_once()
@@ -57,10 +62,6 @@ def test_post_run(
 
     logging.getLogger(__name__)
     caplog.set_level(logging.INFO)
-
-    # introduce a forbidden character ("*") to make sure it gets sanitized:
-    invalid_run_label = MOCKED_RUN_LABEL + "*"
-    expected_run_label = MOCKED_RUN_LABEL + "star"
 
     this_gear_options = mocked_gear_options
     this_gear_options["save-intermediate-output"] = save_intermediate_output
@@ -86,19 +87,11 @@ def test_post_run(
         gear_name,
         this_gear_options,
         analysis_output_dir,
-        invalid_run_label,
+        MOCKED_RUN_LABEL,
         mocked_errors,
         mocked_warnings,
     )
 
-    # by checking the arguments for the run.zip_output call we check that run.post_run sanitizes the run_label:
-    run.zip_output.assert_called_once_with(
-        str(this_gear_options["output-dir"]),
-        this_gear_options["destination-id"],
-        f"{gear_name}_{expected_run_label}_{this_gear_options['destination-id']}.zip",
-        dry_run=False,
-        exclude_files=None,
-    )
     run.zip_htmls.assert_called_once()
     run.zip_intermediate_selected.assert_called_once()
     if save_intermediate_output:
@@ -155,9 +148,13 @@ def test_main(caplog, mocked_gear_options, mocked_context, errors):
         run.prepare = MagicMock(return_value=([], []))
 
     if errors == "get_bids_data_errors":
-        run.get_bids_data = MagicMock(return_value=(MOCKED_HIERARCHY, [errors]))
+        run.get_bids_data = MagicMock(
+            return_value=(MOCKED_SUBJECT_LABEL, MOCKED_RUN_LABEL, [errors])
+        )
     else:
-        run.get_bids_data = MagicMock(return_value=(MOCKED_HIERARCHY, []))
+        run.get_bids_data = MagicMock(
+            return_value=(MOCKED_SUBJECT_LABEL, MOCKED_RUN_LABEL, [])
+        )
 
     if errors == "run_errors":
         run.run = MagicMock(side_effect=RuntimeError(errors))
