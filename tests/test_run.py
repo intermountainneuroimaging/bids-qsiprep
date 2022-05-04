@@ -23,11 +23,13 @@ def test_get_bids_data(
     # introduce a forbidden character ("*") to make sure it gets sanitized:
     invalid_run_label = MOCKED_RUN_LABEL + "*"
     expected_run_label = MOCKED_RUN_LABEL + "star"
-    mocked_hierarchy = {
+    mocked_hierarchy_dict = {
         "run_label": invalid_run_label,
         "subject_label": MOCKED_SUBJECT_LABEL,
     }
-    run.get_analysis_run_level_and_hierarchy = MagicMock(return_value=mocked_hierarchy)
+    run.get_analysis_run_level_and_hierarchy = MagicMock(
+        return_value=mocked_hierarchy_dict
+    )
     download_bids_for_runlevel_return_value = 0
     expected_errors = []
     if download_bids_for_runlevel_error:
