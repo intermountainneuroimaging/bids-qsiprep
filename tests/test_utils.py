@@ -20,7 +20,7 @@ def test_make_dirs_and_files(tmpdir):
     assert [op.exists(f) for f in files]
 
 
-def test_pretend_it_ran(tmpdir, caplog, mocked_gear_options):
+def test_pretend_it_ran(tmpdir, caplog, search_caplog_contains, mocked_gear_options):
     """Tests for pretend_it_ran"""
 
     logging.getLogger(__name__)
@@ -39,7 +39,7 @@ def test_pretend_it_ran(tmpdir, caplog, mocked_gear_options):
     dry_run.pretend_it_ran(mocked_gear_options, mocked_app_options)
 
     for msg in ["Executing command", "Creating fake output"]:
-        assert [msg in caplog.messages]
+        assert search_caplog_contains(caplog, msg)
     assert [op.exists(ef) for ef in expected_folders]
     assert op.exists(
         op.join(

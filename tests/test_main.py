@@ -120,7 +120,9 @@ def test_prepare(mocked_gear_options):
 @pytest.mark.parametrize("dry_run", [True, False])
 # - main_command = "echo" / "ohce"  ; this checks what happens if exec_command returns an error
 @pytest.mark.parametrize("main_command", ["echo", "ohce"])
-def test_run(tmpdir, caplog, mocked_gear_options, dry_run, main_command):
+def test_run(
+    tmpdir, caplog, search_caplog_contains, mocked_gear_options, dry_run, main_command
+):
     """Unit tests for run"""
 
     logging.getLogger(__name__)
@@ -149,9 +151,4 @@ def test_run(tmpdir, caplog, mocked_gear_options, dry_run, main_command):
     assert os.path.exists(
         Path(foo_gear_options["output-dir"]) / Path(foo_gear_options["destination-id"])
     )
-    # Check that there is a record in the log saying "Executing command" followed by my_cmd.
-    # This shows that "exec_command" was run with the expected command.
-    executing_command_lines = [
-        l.message for l in caplog.records if "Executing command" in l.message
-    ]
-    assert [" ".join(my_cmd) in l for l in executing_command_lines]
+    assert search_caplog_contains(caplog, "Executing command", " ".join(my_cmd))

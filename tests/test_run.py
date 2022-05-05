@@ -58,7 +58,12 @@ def test_get_bids_data(
 # - keep_output: True/False
 @pytest.mark.parametrize("keep_output", [True, False])
 def test_post_run(
-    tmpdir, caplog, mocked_gear_options, save_intermediate_output, keep_output
+    tmpdir,
+    caplog,
+    search_caplog_contains,
+    mocked_gear_options,
+    save_intermediate_output,
+    keep_output,
 ):
     """Test the post_run method"""
 
@@ -103,25 +108,17 @@ def test_post_run(
 
     if keep_output:
         assert os.path.isdir(analysis_output_dir)
-        assert "NOT removing output directory" in caplog.text
+        assert search_caplog_contains(caplog, "NOT removing output directory")
     else:
         assert not os.path.isdir(analysis_output_dir)
 
     # Make sure there is a "Previous warnings" entry in the log, with a list of the mocked_warnings:
-    assert ["Previous warnings" in l.message for l in caplog.records]
-    warning_log_entry = [
-        l.message for l in caplog.records if "Previous warnings" in l.message
-    ][0]
-    for e in mocked_warnings:
-        assert e in warning_log_entry
+    assert [
+        search_caplog_contains(caplog, "Previous warnings", w) for w in mocked_warnings
+    ]
 
     # Make sure there is a "Previous errors" entry in the log, with a list of the mocked_errors:
-    assert ["Previous errors" in l.message for l in caplog.records]
-    error_log_entry = [
-        l.message for l in caplog.records if "Previous errors" in l.message
-    ][0]
-    for e in mocked_errors:
-        assert e in error_log_entry
+    assert [search_caplog_contains(caplog, "Previous errors", e) for e in mocked_errors]
 
 
 # Test 4 use cases:
@@ -129,7 +126,9 @@ def test_post_run(
 @pytest.mark.parametrize(
     "errors", [None, "prepare_errors", "get_bids_data_errors", "run_errors"]
 )
-def test_main(caplog, mocked_gear_options, mocked_context, errors):
+def test_main(
+    caplog, search_caplog_contains, mocked_gear_options, mocked_context, errors
+):
     """Unit tests for main"""
 
     logging.getLogger(__name__)
@@ -182,7 +181,7 @@ def test_main(caplog, mocked_gear_options, mocked_context, errors):
         # when prepare throws an error, we still want to run the `post_run` to return any
         # intermediate files, which might help find what the error was.
         run.post_run.assert_called()
-        assert ["Command was NOT run" in l.message for l in caplog.records]
+        assert search_caplog_contains(caplog, "Command was NOT run")
 
     elif errors == "get_bids_data_errors":
         run.get_bids_data.assert_called_once()
@@ -195,4 +194,4 @@ def test_main(caplog, mocked_gear_options, mocked_context, errors):
         run.get_bids_data.assert_called_once()
         run.run.assert_called_once()
         run.post_run.assert_called_once()
-        assert [l.levelno == logging.CRITICAL for l in caplog.records]
+        assert [rec.levelno == logging.CRITICAL for rec in caplog.records]
