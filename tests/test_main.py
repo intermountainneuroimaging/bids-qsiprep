@@ -151,4 +151,6 @@ def test_run(
     assert os.path.exists(
         Path(foo_gear_options["output-dir"]) / Path(foo_gear_options["destination-id"])
     )
+    # Check that there is a record in the log with "Executing command" and my_cmd.
+    # This shows that "exec_command" was run with the expected command.
     assert search_caplog_contains(caplog, "Executing command", " ".join(my_cmd))
