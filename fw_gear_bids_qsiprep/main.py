@@ -139,6 +139,7 @@ def run(gear_options: dict, app_options: dict) -> int:
         cont_output=True,
     )
 
+    # if we made it this far, return success:
     run_error = 0
 
     return run_error
