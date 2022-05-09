@@ -113,12 +113,17 @@ def test_post_run(
         assert not os.path.isdir(analysis_output_dir)
 
     # Make sure there is a "Previous warnings" entry in the log, with a list of the mocked_warnings:
-    assert [
-        search_caplog_contains(caplog, "Previous warnings", w) for w in mocked_warnings
-    ]
+    assert all(
+        [
+            search_caplog_contains(caplog, "Previous warnings", w)
+            for w in mocked_warnings
+        ]
+    )
 
     # Make sure there is a "Previous errors" entry in the log, with a list of the mocked_errors:
-    assert [search_caplog_contains(caplog, "Previous errors", e) for e in mocked_errors]
+    assert all(
+        [search_caplog_contains(caplog, "Previous errors", e) for e in mocked_errors]
+    )
 
 
 # Test 4 use cases:
