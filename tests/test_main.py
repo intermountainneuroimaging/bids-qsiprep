@@ -115,20 +115,19 @@ def test_prepare(mocked_gear_options):
     assert warnings == expected_warnings
 
 
-# Test 2x2 use cases:
+# Test 2 use cases:
 # - dry_run = True/False
 @pytest.mark.parametrize("dry_run", [True, False])
-# - main_command = "echo" / "ohce"  ; this checks what happens if exec_command returns an error
-@pytest.mark.parametrize("main_command", ["echo", "ohce"])
-def test_run(
-    tmpdir, caplog, search_caplog_contains, mocked_gear_options, dry_run, main_command
-):
-    """Unit tests for run"""
+def test_run(tmpdir, caplog, search_caplog_contains, mocked_gear_options, dry_run):
+    """Unit tests for run
+
+    We test the cases of a dry run and of a successful real run
+    """
 
     logging.getLogger(__name__)
     caplog.set_level(logging.INFO)
 
-    my_cmd = [main_command, "Foo"]
+    my_cmd = ["echo", "Foo"]
     main.generate_command = MagicMock(return_value=my_cmd)
 
     # main.run attempts to create the "destination-id" folder, so need to modify the default one:
@@ -137,15 +136,8 @@ def test_run(
     if dry_run:
         foo_gear_options["dry-run"] = True
 
-    if main_command == "ohce" and not dry_run:
-        with pytest.raises(RuntimeError):
-            exit_code = main.run(mocked_gear_options, {})
-            assert exit_code > 0
-        return
-    else:
-        exit_code = main.run(mocked_gear_options, {})
+    exit_code = main.run(mocked_gear_options, {})
 
-    # The following only runs for the cases in which errors are not expected:
     assert exit_code == 0
     main.generate_command.assert_called_once()
     assert os.path.exists(
@@ -154,3 +146,21 @@ def test_run(
     # Check that there is a record in the log with "Executing command" and my_cmd.
     # This shows that "exec_command" was run with the expected command.
     assert search_caplog_contains(caplog, "Executing command", " ".join(my_cmd))
+
+
+def test_run_error(tmpdir, caplog, search_caplog_contains, mocked_gear_options):
+    """Unit tests for run when running the command throws an error"""
+
+    logging.getLogger(__name__)
+    caplog.set_level(logging.INFO)
+
+    my_cmd = ["ohce", "Foo"]
+    main.generate_command = MagicMock(return_value=my_cmd)
+
+    # main.run attempts to create the "destination-id" folder, so need to modify the default one:
+    foo_gear_options = mocked_gear_options
+    foo_gear_options["output-dir"] = tmpdir / foo_gear_options["output-dir"]
+
+    # We expect a runtime error:
+    with pytest.raises(RuntimeError):
+        main.run(mocked_gear_options, {})
