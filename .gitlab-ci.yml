@@ -1,6 +1,6 @@
 include:
   - project: flywheel-io/flywheel-apps/utils/ci-templates
-    ref: main
+    ref: 4472a37cc1b11ce72d8f3d2fdefd6015fc359e2f
     file: poetry-pre-commit.yml
 
 variables:
