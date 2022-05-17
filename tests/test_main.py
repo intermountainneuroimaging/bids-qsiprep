@@ -39,8 +39,8 @@ def test_generate_command(run_bids_validation, bids_app_args):
 
     # Check that the returned cmd:
     # - is a list of strings:
-    assert type(cmd) == list
-    assert [type(c) == str for c in cmd]
+    assert isinstance(cmd, list)
+    assert all(isinstance(c, str) for c in cmd)
     # - the first item is the desired_bids_app_binary:
     assert cmd[0] == desired_bids_app_binary
     # - the third item is the output_dir:
@@ -55,7 +55,7 @@ def test_generate_command(run_bids_validation, bids_app_args):
     # Check that the other app_options are in the cmd:
     for key, val in app_options.items():
         if key != "bids_app_args":
-            if type(val) is bool:
+            if isinstance(val, bool):
                 assert f"--{key}" in cmd
             else:
                 if " " in val:
