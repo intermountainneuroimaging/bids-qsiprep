@@ -1,7 +1,7 @@
 repos:
   # Hooks for non python files
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: main
+    rev: v4.2.0
     hooks:
     - id: check-json
     - id: check-toml
@@ -12,7 +12,7 @@ repos:
 
   # python related hooks
   - repo: https://gitlab.com/flywheel-io/flywheel-apps/utils/pre-commit-hooks
-    rev: master
+    rev: 99e2d3ce6519597a950e762a60653dc04f84e22e
     hooks:
       - id: isort               # sort import section
       - id: black               # linting

@@ -2,7 +2,7 @@
 import logging
 import os.path
 from pathlib import Path
-from unittest.mock import MagicMock
+from unittest.mock import patch
 
 import pytest
 
@@ -118,7 +118,15 @@ def test_prepare(mocked_gear_options):
 # Test 2 use cases:
 # - dry_run = True/False
 @pytest.mark.parametrize("dry_run", [True, False])
-def test_run(tmpdir, caplog, search_caplog_contains, mocked_gear_options, dry_run):
+@patch("fw_gear_bids_qsiprep.main.generate_command")
+def test_run(
+    mock_generate_command,
+    tmpdir,
+    caplog,
+    search_caplog_contains,
+    mocked_gear_options,
+    dry_run,
+):
     """Unit tests for run
 
     We test the cases of a dry run and of a successful real run
@@ -128,7 +136,7 @@ def test_run(tmpdir, caplog, search_caplog_contains, mocked_gear_options, dry_ru
     caplog.set_level(logging.INFO)
 
     my_cmd = ["echo", "Foo"]
-    main.generate_command = MagicMock(return_value=my_cmd)
+    mock_generate_command.return_value = my_cmd
 
     # main.run attempts to create the "destination-id" folder, so need to modify the default one:
     foo_gear_options = mocked_gear_options
@@ -139,7 +147,7 @@ def test_run(tmpdir, caplog, search_caplog_contains, mocked_gear_options, dry_ru
     exit_code = main.run(mocked_gear_options, {})
 
     assert exit_code == 0
-    main.generate_command.assert_called_once()
+    mock_generate_command.assert_called_once()
     assert os.path.exists(
         Path(foo_gear_options["output-dir"]) / Path(foo_gear_options["destination-id"])
     )
@@ -148,14 +156,15 @@ def test_run(tmpdir, caplog, search_caplog_contains, mocked_gear_options, dry_ru
     assert search_caplog_contains(caplog, "Executing command", " ".join(my_cmd))
 
 
-def test_run_error(tmpdir, caplog, search_caplog_contains, mocked_gear_options):
+@patch("fw_gear_bids_qsiprep.main.generate_command")
+def test_run_error(mock_generate_command, tmpdir, caplog, mocked_gear_options):
     """Unit tests for run when running the command throws an error"""
 
     logging.getLogger(__name__)
     caplog.set_level(logging.INFO)
 
     my_cmd = ["ohce", "Foo"]
-    main.generate_command = MagicMock(return_value=my_cmd)
+    mock_generate_command.return_value = my_cmd
 
     # main.run attempts to create the "destination-id" folder, so need to modify the default one:
     foo_gear_options = mocked_gear_options
