@@ -7,6 +7,7 @@ import logging
 from glob import glob
 from os import chdir
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -46,7 +47,10 @@ def test_dry_run_works(
             if key not in gtk_context.manifest:
                 gtk_context.manifest[key] = manifest[key]
 
-        with pytest.raises(SystemExit) as pytest_exit:
+        # call run.main, patching install_freesurfer_license:
+        with pytest.raises(SystemExit) as pytest_exit, patch(
+            "run.install_freesurfer_license"
+        ):
             run.main(gtk_context)
 
     assert pytest_exit.value.code == 0

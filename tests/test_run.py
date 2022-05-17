@@ -1,10 +1,9 @@
 """Module to test run.py"""
 import logging
 import os
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
-from flywheel_gear_toolkit import GearToolkitContext
 
 import run
 
@@ -15,8 +14,14 @@ MOCKED_SUBJECT_LABEL = "sub-Mocked"
 # Test 2 use cases:
 # - download_bids_for_runlevel returns an error: True/None
 @pytest.mark.parametrize("download_bids_for_runlevel_error", [True, False])
+@patch("run.get_analysis_run_level_and_hierarchy")
+@patch("run.download_bids_for_runlevel")
 def test_get_bids_data(
-    mocked_context, mocked_gear_options, download_bids_for_runlevel_error
+    mock_download_bids_for_runlevel,
+    mock_get_analysis_run_level_and_hierarchy,
+    mocked_context,
+    mocked_gear_options,
+    download_bids_for_runlevel_error,
 ):
     """Unit tests for get_bids_data"""
 
@@ -27,17 +32,15 @@ def test_get_bids_data(
         "run_label": invalid_run_label,
         "subject_label": MOCKED_SUBJECT_LABEL,
     }
-    run.get_analysis_run_level_and_hierarchy = MagicMock(
-        return_value=mocked_hierarchy_dict
-    )
+    mock_get_analysis_run_level_and_hierarchy.return_value = mocked_hierarchy_dict
     download_bids_for_runlevel_return_value = 0
     expected_errors = []
     if download_bids_for_runlevel_error:
         download_bids_for_runlevel_return_value = 1
         expected_errors = ["BIDS Error(s) detected"]
 
-    run.download_bids_for_runlevel = MagicMock(
-        return_value=download_bids_for_runlevel_return_value
+    mock_download_bids_for_runlevel.return_value = (
+        download_bids_for_runlevel_return_value
     )
 
     subject_label, run_label, errors = run.get_bids_data(
@@ -48,16 +51,24 @@ def test_get_bids_data(
     # check that the run_label gets sanitized
     assert run_label == expected_run_label
     assert errors == expected_errors
-    run.get_analysis_run_level_and_hierarchy.assert_called_once()
-    run.download_bids_for_runlevel.assert_called_once()
+    mock_get_analysis_run_level_and_hierarchy.assert_called_once()
+    mock_download_bids_for_runlevel.assert_called_once()
 
 
+@patch("run.zip_output")
+@patch("run.zip_htmls")
+@patch("run.zip_all_intermediate_output")
+@patch("run.zip_intermediate_selected")
 # Test 2x2 use cases:
 # - save_intermediate_output: True/False
 @pytest.mark.parametrize("save_intermediate_output", [True, False])
 # - keep_output: True/False
 @pytest.mark.parametrize("keep_output", [True, False])
 def test_post_run(
+    mock_zip_intermediate_selected,
+    mock_zip_all_intermediate_output,
+    mock_zip_htmls,
+    mock_zip_output,
     tmpdir,
     caplog,
     search_caplog_contains,
@@ -85,11 +96,6 @@ def test_post_run(
     # make analysis_output_dir (to later check if it was removed)
     os.mkdir(analysis_output_dir)
 
-    run.zip_output = MagicMock()
-    run.zip_htmls = MagicMock()
-    run.zip_all_intermediate_output = MagicMock()
-    run.zip_intermediate_selected = MagicMock()
-
     run.post_run(
         gear_name,
         this_gear_options,
@@ -99,12 +105,12 @@ def test_post_run(
         mocked_warnings,
     )
 
-    run.zip_htmls.assert_called_once()
-    run.zip_intermediate_selected.assert_called_once()
+    mock_zip_htmls.assert_called_once()
+    mock_zip_intermediate_selected.assert_called_once()
     if save_intermediate_output:
-        run.zip_all_intermediate_output.assert_called_once()
+        mock_zip_all_intermediate_output.assert_called_once()
     else:
-        run.zip_all_intermediate_output.assert_not_called()
+        mock_zip_all_intermediate_output.assert_not_called()
 
     if keep_output:
         assert os.path.isdir(analysis_output_dir)
@@ -131,8 +137,22 @@ def test_post_run(
 @pytest.mark.parametrize(
     "errors", [None, "prepare_errors", "get_bids_data_errors", "run_errors"]
 )
+@patch("run.install_freesurfer_license")
+@patch("run.prepare")
+@patch("run.get_bids_data")
+@patch("run.run")
+@patch("run.post_run")
 def test_main(
-    caplog, search_caplog_contains, mocked_gear_options, mocked_context, errors
+    mock_post_run,
+    mock_run,
+    mock_get_bids_data,
+    mock_prepare,
+    mock_install_freesurfer_license,
+    caplog,
+    search_caplog_contains,
+    mocked_gear_options,
+    mocked_context,
+    errors,
 ):
     """Unit tests for main"""
 
@@ -146,57 +166,56 @@ def test_main(
     # We expect 'main' to get the subject label from the hierarchy, and strip the "sub-" prefix:
     expected_app_options = {"participant_label": MOCKED_SUBJECT_LABEL[len("sub-") :]}
 
-    run.parse_config = MagicMock(return_value=mocked_parse_config_return)
-    run.install_freesurfer_license = MagicMock()
     if errors == "prepare_errors":
-        run.prepare = MagicMock(return_value=([errors], []))
+        mock_prepare.return_value = ([errors], [])
     else:
-        run.prepare = MagicMock(return_value=([], []))
+        mock_prepare.return_value = ([], [])
 
     if errors == "get_bids_data_errors":
-        run.get_bids_data = MagicMock(
-            return_value=(MOCKED_SUBJECT_LABEL, MOCKED_RUN_LABEL, [errors])
+        mock_get_bids_data.return_value = (
+            MOCKED_SUBJECT_LABEL,
+            MOCKED_RUN_LABEL,
+            [errors],
         )
     else:
-        run.get_bids_data = MagicMock(
-            return_value=(MOCKED_SUBJECT_LABEL, MOCKED_RUN_LABEL, [])
-        )
+        mock_get_bids_data.return_value = (MOCKED_SUBJECT_LABEL, MOCKED_RUN_LABEL, [])
 
     if errors == "run_errors":
-        run.run = MagicMock(side_effect=RuntimeError(errors))
+        mock_run.side_effect = RuntimeError(errors)
     else:
-        run.run = MagicMock(return_value=0)
-
-    run.post_run = MagicMock()
+        mock_run.return_value = 0
 
     with pytest.raises(SystemExit):
-        run.main(mocked_context)
+        with patch(
+            "run.parse_config", MagicMock(return_value=mocked_parse_config_return)
+        ):
+            run.main(mocked_context)
 
-    run.install_freesurfer_license.assert_called_once()
-    run.prepare.assert_called_once()
+    mock_install_freesurfer_license.assert_called_once()
+    mock_prepare.assert_called_once()
 
     if errors is None:
-        run.get_bids_data.assert_called_once()
-        run.run.assert_called_once_with(mocked_gear_options, expected_app_options)
-        run.post_run.assert_called_once()
+        mock_get_bids_data.assert_called_once()
+        mock_run.assert_called_once_with(mocked_gear_options, expected_app_options)
+        mock_post_run.assert_called_once()
 
     elif errors == "prepare_errors":
-        run.get_bids_data.assert_not_called()
-        run.run.assert_not_called()
-        # when prepare throws an error, we still want to run the `post_run` to return any
-        # intermediate files, which might help find what the error was.
-        run.post_run.assert_called()
+        mock_get_bids_data.assert_not_called()
+        mock_run.assert_not_called()
+        # when prepare throws an error, we still want to run the `post_run` to return
+        # any intermediate files, which might help find what the error was.
+        mock_post_run.assert_called()
         assert search_caplog_contains(caplog, "Command was NOT run")
 
     elif errors == "get_bids_data_errors":
-        run.get_bids_data.assert_called_once()
-        run.run.assert_not_called()
-        # when get_bids_data throws an error, we still want to run the `post_run` to return any
-        # intermediate files, which might help find what the error was.
-        run.post_run.assert_called()
+        mock_get_bids_data.assert_called_once()
+        mock_run.assert_not_called()
+        # when get_bids_data throws an error, we still want to run the `post_run` to
+        # return any intermediate files, which might help find what the error was.
+        mock_post_run.assert_called()
 
     elif errors == "run_errors":
-        run.get_bids_data.assert_called_once()
-        run.run.assert_called_once()
-        run.post_run.assert_called_once()
+        mock_get_bids_data.assert_called_once()
+        mock_run.assert_called_once()
+        mock_post_run.assert_called_once()
         assert [rec.levelno == logging.CRITICAL for rec in caplog.records]

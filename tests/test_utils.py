@@ -3,6 +3,7 @@
 import logging
 from os import path as op
 from os import symlink
+from pathlib import Path
 
 import pytest
 
@@ -27,6 +28,8 @@ def test_pretend_it_ran(tmpdir, caplog, search_caplog_contains, mocked_gear_opti
     caplog.set_level(logging.INFO)
 
     mocked_gear_options["dry-run"] = True
+    mocked_gear_options["work-dir"] = Path("")
+    mocked_gear_options["analysis-level"] = "participant"
 
     mocked_app_options = {"foo": "bar"}
 
