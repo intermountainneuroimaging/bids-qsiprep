@@ -36,7 +36,6 @@ def pretend_it_ran(gear_options: dict, app_options: dict) -> None:
         gear_options: dict with gear-specific options
         app_options: dict with options for the BIDS-App
     """
-
     # 1) Call run.
     #    Because gear_options["dry-run"] is True, run.exec_command will log the call,
     #    but will not run.

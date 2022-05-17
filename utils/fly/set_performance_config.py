@@ -22,7 +22,6 @@ def set_n_cpus(n_cpus):
     Returns:
         n_cpus (int) which will become part of the command line command
     """
-
     os_cpu_count = os.cpu_count()
     log.info("os.cpu_count() = %d", os_cpu_count)
     if n_cpus:
@@ -52,7 +51,6 @@ def set_mem_gb(mem_gb):
     Returns:
         mem_gb (float) which will become part of the command line command
     """
-
     # TO-DO: maybe we should modify "set_mem_gb" so that we never go above 90-95% of
     #  the available mem in the system
     psutil_mem_gb = int(psutil.virtual_memory().available / (1024**3))

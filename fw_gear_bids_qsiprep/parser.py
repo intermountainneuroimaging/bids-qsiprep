@@ -6,7 +6,6 @@ from flywheel_gear_toolkit import GearToolkitContext
 from utils.fly.set_performance_config import set_mem_gb, set_n_cpus
 
 
-# This function mainly parses gear_context's config.json file and returns relevant inputs and options.
 def parse_config(
     gear_context: GearToolkitContext,
 ) -> Tuple[bool, dict, dict]:
@@ -17,7 +16,6 @@ def parse_config(
         gear_options: options for the gear
         app_options: options to pass to the app
     """
-
     debug = gear_context.config.get("debug")
 
     """   Gear config   """

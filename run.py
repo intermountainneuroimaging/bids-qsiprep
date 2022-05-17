@@ -66,7 +66,6 @@ def get_bids_data(
         run_label (str): FW run_label, (from the hierarchy of the destination container)
         errors (list[str]): list of generated errors
     """
-
     errors = []
 
     # Given the destination container, figure out if running at the project,
@@ -117,7 +116,6 @@ def post_run(
         errors (list[str]): list of errors found
         warnings (list[str]): list of warnings found
     """
-
     # zip entire output/<analysis_id> folder into
     #  <gear_name>_<project|subject|session label>_<analysis.id>.zip
     zip_file_name = f"{gear_name}_{run_label}_{gear_options['destination-id']}.zip"
@@ -188,7 +186,6 @@ def post_run(
 
 def main(context: GearToolkitContext) -> None:
     """Parses config and run."""
-
     # Errors and warnings will always be logged when they are detected.
     # Keep a list of errors and warning to print all in one place at end of log
     # Any errors will prevent the BIDS App from running.

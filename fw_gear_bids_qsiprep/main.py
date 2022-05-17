@@ -29,7 +29,6 @@ def generate_command(
     Returns:
         cmd (list of str): command to execute
     """
-
     # Common to all BIDS Apps (https://github.com/BIDS-Apps), start with the command
     # itself and the 3 positional args: bids path, output dir, analysis-level
     # ("participant"/"group").
@@ -102,7 +101,6 @@ def prepare(
         errors (list[str]): list of generated errors
         warnings (list[str]): list of generated warnings
     """
-
     # for now, no errors or warnings, but leave this in place to allow future methods
     # to return an error
     errors = []
