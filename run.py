@@ -24,7 +24,6 @@ from flywheel_gear_toolkit.utils.zip_tools import zip_output
 # another project, which enables chaining multiple gears together.
 from fw_gear_bids_qsiprep.main import prepare, run
 from fw_gear_bids_qsiprep.parser import parse_config
-from fw_gear_bids_qsiprep.post import post_run
 from utils.dry_run import pretend_it_ran
 
 # The gear is split up into 2 main components. The run.py file which is executed
