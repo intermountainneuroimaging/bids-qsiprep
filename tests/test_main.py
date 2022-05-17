@@ -63,7 +63,8 @@ def test_generate_command(run_bids_validation, bids_app_args):
                 else:
                     assert f"--{key}={val}" in cmd
 
-    # Check that if the "run-bids-validation" key is missing from the gear_options, "--skip-bids-validation" is in the returned command
+    # Check that if the "run-bids-validation" key is missing from the gear_options,
+    # "--skip-bids-validation" is in the returned command:
     if "run-bids-validation" not in gear_options:
         assert "--skip-bids-validation" in cmd
 
@@ -138,7 +139,8 @@ def test_run(
     my_cmd = ["echo", "Foo"]
     mock_generate_command.return_value = my_cmd
 
-    # main.run attempts to create the "destination-id" folder, so need to modify the default one:
+    # main.run attempts to create the "destination-id" folder, so need to modify the
+    # default one:
     foo_gear_options = mocked_gear_options
     foo_gear_options["output-dir"] = tmpdir / foo_gear_options["output-dir"]
     if dry_run:
@@ -166,7 +168,8 @@ def test_run_error(mock_generate_command, tmpdir, caplog, mocked_gear_options):
     my_cmd = ["ohce", "Foo"]
     mock_generate_command.return_value = my_cmd
 
-    # main.run attempts to create the "destination-id" folder, so need to modify the default one:
+    # main.run attempts to create the "destination-id" folder, so need to modify the
+    # default one:
     foo_gear_options = mocked_gear_options
     foo_gear_options["output-dir"] = tmpdir / foo_gear_options["output-dir"]
 

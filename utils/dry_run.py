@@ -38,7 +38,8 @@ def pretend_it_ran(gear_options: dict, app_options: dict) -> None:
     """
 
     # 1) Call run.
-    #    Because gear_options["dry-run"] is True, run.exec_command will log the call, but will not run.
+    #    Because gear_options["dry-run"] is True, run.exec_command will log the call,
+    #    but will not run.
     run(gear_options, app_options)
 
     # 2) Recreate the expected output:

@@ -55,16 +55,18 @@ def parse_config(
     * version: SKIPPED, can be passed in as a gear argument
     * skip-bids-validation: SKIPPED combined with the template's "run_validation"
     * participant-label: SKIPPED handled by the template
-    * acquisition_type: ADDED  but it may be handled by the template, not sure what it does
+    * acquisition_type: ADDED  but it may be handled by the template, not sure what it
+        does
     * bids-database-dir:
     * bids-filter-file:
     * interactive-reports-only: ADDED as boolean
-    * recon-only: SKIPPED for now because I think due to flywheel infrastructure, there's no
-        way to pass in "preprocessed" data to this gear...I could be wrong. 
-    * recon-spec: ADDED, maybe qsi has some recon pipeline stuff built in? (added as input)
+    * recon-only: SKIPPED for now because I think due to flywheel infrastructure, there
+        is no way to pass in "preprocessed" data to this gear...I could be wrong.
+    * recon-spec: ADDED, maybe qsi has some recon pipeline stuff built in? (added as
+        input)
     * recon-input: SKIPPED because gear
-    * freesurfer-input: 
-    * skip-odf-reports: 
+    * freesurfer-input:
+    * skip-odf-reports:
     * nthreads: SKIPPED, handled by template
     * omp-nthreads: SKIPPED, handled by template
     * mem_mb: SKIPPED, handled by template
@@ -89,7 +91,8 @@ def parse_config(
     * separate-all-dwis: ADDED
     * distortion-group-merge: ADDED
     * write-local-bvecs: ADDED
-    * output-space: ADDED...though it seems limited, it's not deprecated...maybe they have future plans?
+    * output-space: ADDED...though it seems limited, it's not deprecated...maybe they
+        have future plans?
     * template: ADDED, though also limited
     * output-resolution: ADDED
     * b0-to-t1w-transform: ADDED
@@ -112,8 +115,8 @@ def parse_config(
     * use-syn-sdc: ADDED
     * force-syn: ADDED
     * reports-only: ADDED for ease of access
-    All other options from the "Other Options" section are left out, as these can be passed into the 
-    "bids_app_args" section
+    All other options from the "Other Options" section are left out, as these can be
+    passed into the "bids_app_args" section
 
     """
 

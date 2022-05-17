@@ -80,9 +80,11 @@ def test_parse_config(tmpdir):
             ]
             assert mock_get_input_data.call_count == len(expected_get_input_path_calls)
 
-            # Make sure the input args "recon-spec" and "eddy-config" get return in app_options
-            # we skip the "freesurfer_license" because its key is "freesurfer-license-path"
+            # Make sure the input args "recon-spec" and "eddy-config" get return in
+            # app_options we skip the "freesurfer_license" because its key is
+            # "freesurfer-license-path"
             for input_path in expected_get_input_path_calls[1:]:
-                # if there was an input path in the context, it should be present in the app_options:
-                if gear_context.get_input_path(input_path):
+                # if there was an input path in the context, it should be present in the
+                # app_options:
+                if mock_get_input_data(input_path):
                     assert input_path in app_opt

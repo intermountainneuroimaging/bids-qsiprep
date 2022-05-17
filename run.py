@@ -19,9 +19,9 @@ from flywheel_gear_toolkit.licenses.freesurfer import install_freesurfer_license
 from flywheel_gear_toolkit.utils.file import sanitize_filename
 from flywheel_gear_toolkit.utils.zip_tools import zip_output
 
-# This design with the main interfaces separated from a gear module (with main and parser)
-# allows the gear module to be publishable, so it can then be imported in another project,
-# which enables chaining multiple gears together.
+# This design with the main interfaces separated from a gear module (with main and
+# parser) allows the gear module to be publishable, so it can then be imported in
+# another project, which enables chaining multiple gears together.
 from fw_gear_bids_qsiprep.main import prepare, run
 from fw_gear_bids_qsiprep.parser import parse_config
 from fw_gear_bids_qsiprep.post import post_run
@@ -59,7 +59,8 @@ def get_bids_data(
         tree_title (str): title for the BIDS tree
 
     Returns:
-        subject_label (str): FW subject_label, (from the hierarchy of the destination container)
+        subject_label (str): FW subject_label, (from the hierarchy of the destination
+            container)
         run_label (str): FW run_label, (from the hierarchy of the destination container)
         errors (list[str]): list of generated errors
     """
@@ -197,14 +198,15 @@ def main(context: GearToolkitContext) -> None:
     # to extract the args, kwargs from the context (e.g. config.json).
     debug, gear_options, app_options = parse_config(context)
 
-    # TO-DO: install_freesurfer_license from the gear_toolkit takes the gear context as an argument,
-    #    so it is only valid for FW instances. However, the functionality of taking a FreeSurfer
-    #    license (either string or file) and copying it to wherever your app expects it should be
-    #    the same whether you run it on FW, or XNAT or HPC or locally.
-    #    In the future, it would be great to have a "instance-independent" install_freesurfer_license
-    #    and have a "instance-dependent" function to extract the license from the context.
-    #    At that point, we could extract the license e.g. in the parser, and this function can be moved
-    #    to fw_gear_bids_qsiprep.main
+    # TO-DO: install_freesurfer_license from the gear_toolkit takes the gear context as
+    #    an argument, so it is only valid for FW instances. However, the functionality
+    #    of taking a FreeSurfer license (either string or file) and copying it to
+    #    wherever your app expects it should be the same whether you run it on FW, or
+    #    XNAT or HPC or locally.
+    #    In the future, it would be great to have a "instance-independent"
+    #    install_freesurfer_license and have a "instance-dependent" function to extract
+    #    the license from the context. At that point, we could extract the license e.g.
+    #    in the parser, and this function can be moved to fw_gear_bids_qsiprep.main
     install_freesurfer_license(
         context,
         Path(os.environ.get("FREESURFER_HOME", FREESURFER_HOME)) / "license.txt",
@@ -225,7 +227,8 @@ def main(context: GearToolkitContext) -> None:
         )
         errors += get_bids_errors
 
-        # For BIDS-Apps that run at the participant level, set the "participant_label" (if not set in the options).
+        # For BIDS-Apps that run at the participant level, set the
+        # "participant_label" (if not set in the options).
         if (
             gear_options["analysis-level"] == "participant"
             and not app_options["participant_label"]
@@ -234,7 +237,8 @@ def main(context: GearToolkitContext) -> None:
 
         # In general, BIDS-Apps take only the (subject) label, without the "sub-" part:
         if app_options["participant_label"].startswith("sub-"):
-            # Write this in two instructions because if you write it in on, Black will format it horribly:
+            # Write this in two instructions because if you write it in one, Black will
+            # format it horribly:
             new_participant_label = app_options["participant_label"][len("sub-") :]
             app_options["participant_label"] = new_participant_label
 
@@ -269,16 +273,18 @@ def main(context: GearToolkitContext) -> None:
         else:
             # Placeholder for saving metadata.
             # We want to save the metadata only if the run was successful.
-            # We want to save partial outputs in the event of the app crashing, because the partial outputs can help
-            # pinpoint what the exact problem was. So we have `post_run` under "finally"
+            # We want to save partial outputs in the event of the app crashing, because
+            # the partial outputs can help pinpoint what the exact problem was. So we
+            # have `post_run` under "finally"
             save_metadata = True
 
     # post_run should be run regardless of dry-run or exit code.
     output_analysis_id_dir = Path(gear_options["output-dir"]) / Path(
         gear_options["destination-id"]
     )
-    # Cleanup, move all results to the output directory
-    # It will be run even in the event of an error, so that the partial results are available for debugging.
+    # Cleanup, move all results to the output directory.
+    # It will be run even in the event of an error, so that the partial results are
+    # available for debugging.
     post_run(
         gear_name=context.manifest["name"],
         gear_options=gear_options,
@@ -289,7 +295,8 @@ def main(context: GearToolkitContext) -> None:
     )
 
     gear_builder = context.manifest.get("custom").get("gear-builder")
-    # gear_builder.get("image") should be something like: flywheel/bids-qsiprep:0.0.1_0.15.1
+    # gear_builder.get("image") should be something like:
+    # flywheel/bids-qsiprep:0.0.1_0.15.1
     container = gear_builder.get("image").split(":")[0]
     log.info("%s Gear is done.  Returning %s", container, e_code)
 

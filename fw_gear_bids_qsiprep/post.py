@@ -19,6 +19,5 @@ def post_run(
     Parts might be BIDS-App specific (the results), parts will be common
     (reporting errors, clean-up, etc.)
     """
-
     # do nothing, for now
     pass

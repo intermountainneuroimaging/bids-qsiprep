@@ -12,7 +12,8 @@ After cloning the repo:
 poetry env use <path/to/your/python/executable>
 poetry update
 ```
-1. `poetry install`: Install project and all dependencies (see __Dependency management__ below)
+1. `poetry install`: Install project and all dependencies (see
+   __Dependency management__ below)
 2. `pre-commit install`: Install pre-commit hooks (see __Linting and Testing__ below)
 
 ## Dependency management
@@ -40,7 +41,8 @@ See full options [Here](https://python-poetry.org/docs/configuration/#available-
 
 List current config: `poetry config --list`
 
-* `poetry config virtualenvs.in-project <true|false|None>`: create virtual environment inside project directory
+* `poetry config virtualenvs.in-project <true|false|None>`: create virtual environment
+inside project directory
 * `poetry config virtualenvs.path <path>`: Path to virtual environment directory.
 
 ## Linting and Testing
@@ -72,7 +74,10 @@ or just be disabled.
 
 ## Adding a contribution
 
-Every contribution should be associated with a ticket on the GEAR JIRA board, or be a hotfix.  You should contribute by creating a branch titled with either `hotfix-<hotfix_name` or `GEAR-<gear_num>-<description>`.  For now, other branch names will be accepted, but soon branch names will be rejected if they don't follow this pattern.
+Every contribution should be associated with a ticket on the GEAR JIRA board, or be a
+hotfix.  You should contribute by creating a branch titled with either
+`hotfix-<hotfix_name>` or `GEAR-<gear_num>-<description>`.  For now, other branch names
+will be accepted, but soon branch names will be rejected if they don't follow this pattern.
 
 When contributing, make a Merge Request against the main branch.
 
@@ -84,14 +89,17 @@ The merge request should contain at least two things:
 2. Update the corresponding entry under `docs/release_notes.md`
 
 
-Adding the release notes does two things: 
+Adding the release notes does two things:
 
-1. It makes it easier for the reviewer to identify what relevant changes they should expect and look for in the MR, and 
+1. It makes it easier for the reviewer to identify what relevant changes they should
+expect and look for in the MR, and
 2. It makes it easier to create a release./
 
 #### Populating release notes.
 
-For example, if the gear is currently on version `0.2.1` and you are working on a bugfix under the branch GEAR-999-my-bugfix.  When you create a merge request against `main`, you should add a section to `docs/release_notes.md` such as the following:
+For example, if the gear is currently on version `0.2.1` and you are working on a bugfix
+under the branch GEAR-999-my-bugfix.  When you create a merge request against `main`,
+you should add a section to `docs/release_notes.md` such as the following:
 
 ```
 ## 0.2.2
@@ -103,7 +111,10 @@ Where the rest of the file contains release notes for previous versions.
 
 #### Adding changelog entry
 
-The [changelog](./docs/changelog.md) is a place to put more informal notes about large design decisions.  This is useful to look back on design desicions made by you, or other engineers and try to understand why. This is not required, but is encouraged for large changes.
+The [changelog](./docs/changelog.md) is a place to put more informal notes about large
+design decisions.  This is useful to look back on design desicions made by you, or other
+engineers and try to understand why. This is not required, but is encouraged for large
+changes.
 
 ### Creating a release
 
@@ -129,6 +140,6 @@ git push origin main
 git push origin --tags
 ```
 
-Once you've pushed tags, you can go to the gitlab UI -> Project Overview -> Releases and create a new release.  You can copy the release notes that are already populated in the `docs/release_notes.md` document.
-
-
+Once you've pushed tags, you can go to the gitlab UI -> Project Overview -> Releases
+and create a new release.  You can copy the release notes that are already populated in
+the `docs/release_notes.md` document.
