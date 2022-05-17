@@ -21,9 +21,9 @@ def make_dirs_and_files(files: List[Union[str, Path]]) -> None:
             ff = str(ff)
 
         if os.path.exists(ff):
-            log.debug("Exists: " + ff)
+            log.debug("Exists: %s", ff)
         else:
-            log.debug("Creating: " + ff)
+            log.debug("Creating: %s", ff)
             dir_name = os.path.dirname(ff)
             os.makedirs(dir_name)
             Path(ff).touch(mode=0o777, exist_ok=True)
@@ -44,7 +44,7 @@ def pretend_it_ran(gear_options: dict, app_options: dict) -> None:
     # 2) Recreate the expected output:
     path = Path("work")
 
-    log.info("Creating fake output in " + str(path))
+    log.info("Creating fake output in %s", str(path))
 
     files = [
         path / "somedir" / "d3.js",
@@ -61,7 +61,7 @@ def pretend_it_ran(gear_options: dict, app_options: dict) -> None:
     # Output directory
     path = Path("output") / Path(gear_options["destination-id"])
 
-    log.info("Creating fake output in " + str(path))
+    log.info("Creating fake output in %s", str(path))
 
     files = [
         path / "somedir" / "logs" / "CITATION.md",
@@ -90,4 +90,4 @@ def pretend_it_ran(gear_options: dict, app_options: dict) -> None:
     ff = path / "somedir" / "sub-TOME3024.html"
     with open(ff, "w") as fp:
         fp.write(html)
-    log.debug("Creating: " + str(ff))
+    log.debug("Creating: %s", str(ff))
