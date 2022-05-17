@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-"""The run script"""
+"""The run script."""
 import logging
 import os
 import shutil
@@ -45,7 +45,9 @@ def get_bids_data(
     gear_options: dict,
     tree_title: str,
 ) -> Tuple[str, str, List[str]]:
-    """Get the data in BIDS structure and return the subject_label and
+    """Get the data in BIDS structure.
+
+    Get the data in BIDS structure and return the subject_label and
     run_label corresponding to the destination container.
     It also returns any error found downloading the BIDS data.
 
@@ -105,8 +107,7 @@ def post_run(
     errors: List[str],
     warnings: List[str],
 ) -> None:
-    """Move all the results to the final destination, write out any
-    metadata, clean-up
+    """Move all the results to the final destination, write out any metadata, clean-up.
 
     Args:
         gear_name (str): gear name, used in the output file names
@@ -186,7 +187,7 @@ def post_run(
 
 
 def main(context: GearToolkitContext) -> None:
-    """Parses config and run"""
+    """Parses config and run."""
 
     # Errors and warnings will always be logged when they are detected.
     # Keep a list of errors and warning to print all in one place at end of log

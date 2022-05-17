@@ -112,7 +112,7 @@ def prepare(
 
 
 def run(gear_options: dict, app_options: dict) -> int:
-    """Run QSIPrep itself
+    """Run QSIPrep itself.
 
     Arguments:
         gear_options: dict with gear-specific options

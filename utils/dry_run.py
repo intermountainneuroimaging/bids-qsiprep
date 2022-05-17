@@ -1,4 +1,4 @@
-"""Run this instead of running actual command"""
+"""Run this instead of running actual command."""
 
 import logging
 import os
