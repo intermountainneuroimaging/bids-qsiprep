@@ -50,7 +50,7 @@ def test_parse_config(tmpdir):
 
             ###   call the parser:   ###
 
-            debug, gear_opt, app_opt = parse_config(gear_context)
+            _, gear_opt, app_opt = parse_config(gear_context)
 
             ###   run the checks:   ###
 

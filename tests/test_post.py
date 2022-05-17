@@ -19,4 +19,4 @@ def test_post_run(mocked_gear_options):
         warnings=[],
     )
 
-    pass
+    assert True

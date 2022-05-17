@@ -43,8 +43,8 @@ def parse_config(
         "client": gear_context.client,
     }
 
-    """   App options   """
-    """
+    """   App options:
+
      Notes on inputs:  These notes follow the input order as documented here:
      https://qsiprep.readthedocs.io/en/latest/usage.html#command-line-arguments
 
