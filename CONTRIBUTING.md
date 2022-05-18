@@ -3,7 +3,7 @@
 ## Getting started
 
 1. Follow instructions to [install poetry](https://python-poetry.org/docs/#installation).
-2. Follow instructions to [install pre-commit](https://pre-commit.com/#install) 
+2. Follow instructions to [install pre-commit](https://pre-commit.com/#install)
 
 After cloning the repo:
 
@@ -25,7 +25,7 @@ develop, build and publish.
 
 ### Dependencies
 
-Dependencies are listed in the `pyproject.toml` file. 
+Dependencies are listed in the `pyproject.toml` file.
 
 #### Managing dependencies
 
@@ -56,7 +56,7 @@ inside project directory
 
 Local linting and testing scripts are managed through
 [`pre-commit`](https://pre-commit.com/).
-Pre-commit allows running hooks which can be defined locally, or in other 
+Pre-commit allows running hooks which can be defined locally, or in other
 repositories. Default hooks to run on each commit:
 
 * check-json: JSON syntax validator
@@ -67,7 +67,7 @@ repositories. Default hooks to run on each commit:
 * black-poetry: Run black in poetry venv
 * pytest-poetry: Run pytest in poetry venv
 
-These hooks will all run automatically on commit, but can also be run manually 
+These hooks will all run automatically on commit, but can also be run manually
 or just be disabled.
 
 ### pre-commit usage:
@@ -137,7 +137,7 @@ git pull origin main # Locally pull updates from main branch
 Then update the versions accordingly:
 
 1. Update poetry version: `poetry version <new_version`
-2. Update the version in the manifest: 
+2. Update the version in the manifest:
     1. Update `"version"` key with new version
     2. Update `"custom.flywheel.gear-builder.image"` key with new image version
 3. Commit version changes
