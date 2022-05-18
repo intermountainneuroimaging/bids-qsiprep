@@ -70,7 +70,7 @@ repositories. Default hooks to run on each commit:
 These hooks will all run automatically on commit, but can also be run manually
 or just be disabled.
 
-### pre-commit usage:
+### pre-commit usage
 
 * Run hooks manually:
   * Run on all files: `pre-commit run -a`
@@ -103,7 +103,7 @@ Adding the release notes does two things:
 expect and look for in the MR, and
 2. It makes it easier to create a release./
 
-#### Populating release notes.
+#### Populating release notes
 
 For example, if the gear is currently on version `0.2.1` and you are working on a bugfix
 under the branch GEAR-999-my-bugfix.  When you create a merge request against `main`,
