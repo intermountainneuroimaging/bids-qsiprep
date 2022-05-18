@@ -109,7 +109,7 @@ For example, if the gear is currently on version `0.2.1` and you are working on 
 under the branch GEAR-999-my-bugfix.  When you create a merge request against `main`,
 you should add a section to `docs/release_notes.md` such as the following:
 
-```
+```markdown
 ## 0.2.2
 BUG:
 * Fixed my-bug, see [GEAR-999](https://flywheelio.atlassian.net/browse/GEAR-999)
