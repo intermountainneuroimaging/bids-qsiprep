@@ -1,6 +1,5 @@
 # Release notes
 
-
 ## 0.2.0
 
 __Maintenance__:
@@ -10,7 +9,6 @@ __Maintenance__:
 __Documentation__:
 
 * Add `docs/changelog.md`
-
 
 ## 0.1.0
 

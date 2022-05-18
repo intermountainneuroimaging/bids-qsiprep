@@ -16,4 +16,3 @@
 - [ ] Test data [added to data-registry](https://gitlab.com/flywheel-io/scientific-solutions/data-registry#b-contributing-data)
 
 - [ ] Regression test for gear added to Qase
-

@@ -8,16 +8,19 @@
 After cloning the repo:
 
 (If you need to change your python version:)
+
 ```shell
 poetry env use <path/to/your/python/executable>
 poetry update
 ```
+
 1. `poetry install`: Install project and all dependencies (see
    __Dependency management__ below)
 2. `pre-commit install`: Install pre-commit hooks (see __Linting and Testing__ below)
 
 ## Dependency management
-This gear uses [`poetry`](https://python-poetry.org/) to manage dependencies, 
+
+This gear uses [`poetry`](https://python-poetry.org/) to manage dependencies,
 develop, build and publish.
 
 ### Dependencies
@@ -25,6 +28,7 @@ develop, build and publish.
 Dependencies are listed in the `pyproject.toml` file. 
 
 #### Managing dependencies
+
 * Adding: Use `poetry add [--dev] <dep>`
 * Removing: Use `poetry remove [--dev] <dep>`
 * Updating: Use `poetry update <dep>` or `poetry update` to update all deps.
@@ -32,12 +36,14 @@ Dependencies are listed in the `pyproject.toml` file.
   * Update dry run: `--dry-run`
 
 #### Using a different version of python
+
 Poetry manages virtual environments and can create a virtual environment with
 different versions of python, however that version must be installed on the machine.  
 
 You can configure the python version by using `poetry env use <path/to/executable>`
 
 #### Helpful poetry config options
+
 See full options [Here](https://python-poetry.org/docs/configuration/#available-settings).
 
 List current config: `poetry config --list`
@@ -47,6 +53,7 @@ inside project directory
 * `poetry config virtualenvs.path <path>`: Path to virtual environment directory.
 
 ## Linting and Testing
+
 Local linting and testing scripts are managed through
 [`pre-commit`](https://pre-commit.com/).
 Pre-commit allows running hooks which can be defined locally, or in other 
@@ -90,7 +97,6 @@ The merge request should contain at least two things:
 1. Your relevant change
 2. Update the corresponding entry under `docs/release_notes.md`
 
-
 Adding the release notes does two things:
 
 1. It makes it easier for the reviewer to identify what relevant changes they should
@@ -109,6 +115,7 @@ BUG:
 * Fixed my-bug, see [GEAR-999](https://flywheelio.atlassian.net/browse/GEAR-999)
 
 ```
+
 Where the rest of the file contains release notes for previous versions.
 
 #### Adding changelog entry
@@ -126,6 +133,7 @@ When your merge request is reviewed and approved, you should pull from main loca
 git checkout main # Locally change to main branch
 git pull origin main # Locally pull updates from main branch
 ```
+
 Then update the versions accordingly:
 
 1. Update poetry version: `poetry version <new_version`
