@@ -88,6 +88,6 @@ def pretend_it_ran(gear_options: dict, app_options: dict) -> None:
     </html>"""
 
     ff = path / "somedir" / "sub-TOME3024.html"
-    with open(ff, "w") as fp:
+    with open(ff, "w", encoding="utf8") as fp:
         fp.write(html)
     log.debug("Creating: %s", str(ff))
