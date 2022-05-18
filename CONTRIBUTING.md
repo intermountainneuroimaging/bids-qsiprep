@@ -73,8 +73,8 @@ or just be disabled.
 ### pre-commit usage:
 
 * Run hooks manually:
-    * Run on all files: `pre-commit run -a`
-    * Run on certain files: `pre-commit run --files test/*`
+  * Run on all files: `pre-commit run -a`
+  * Run on certain files: `pre-commit run --files test/*`
 * Update (e.g. clean and install) hooks: `pre-commit clean && pre-commit install`
 * Disable all hooks: `pre-commit uninstall`
 * Enable all hooks: `pre-commit install`
