@@ -13,8 +13,6 @@ This gear runs the official
 
 this should be set to `true`
 
-# Import Metadata (import-metadata)
-
 ## Overview
 
 *{Link To Usage}*
@@ -56,7 +54,7 @@ features of this software are:
 
 ----
 
-[[_TOC_]]
+[[*TOC*]]
 
 ----
 
@@ -170,7 +168,7 @@ Description of workflow
 
 1. Upload file to container
 1. Select file as input to gear
-1. Geat places output in Analysis
+1. Gear places output in Analysis
 
 ### Use Cases
 
@@ -181,9 +179,9 @@ Should include Screenshots, example files, etc.
 
 ***Conditions***:
 
- -  *{A list of conditons that result in this use case}*
- - [ ] Possibly a list of check boxes indicating things that are absent
- - [x] and things that are present
+- *{A list of conditons that result in this use case}*
+- [ ] Possibly a list of check boxes indicating things that are absent
+- [x] and things that are present
 
 *{Description of the use case}*
 
