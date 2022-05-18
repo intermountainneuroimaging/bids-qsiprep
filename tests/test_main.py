@@ -39,8 +39,8 @@ def test_generate_command(run_bids_validation, bids_app_args):
 
     # Check that the returned cmd:
     # - is a list of strings:
-    assert type(cmd) == list
-    assert [type(c) == str for c in cmd]
+    assert isinstance(cmd, list)
+    assert all(isinstance(c, str) for c in cmd)
     # - the first item is the desired_bids_app_binary:
     assert cmd[0] == desired_bids_app_binary
     # - the third item is the output_dir:
@@ -55,7 +55,7 @@ def test_generate_command(run_bids_validation, bids_app_args):
     # Check that the other app_options are in the cmd:
     for key, val in app_options.items():
         if key != "bids_app_args":
-            if type(val) is bool:
+            if isinstance(val, bool):
                 assert f"--{key}" in cmd
             else:
                 if " " in val:
@@ -63,7 +63,8 @@ def test_generate_command(run_bids_validation, bids_app_args):
                 else:
                     assert f"--{key}={val}" in cmd
 
-    # Check that if the "run-bids-validation" key is missing from the gear_options, "--skip-bids-validation" is in the returned command
+    # Check that if the "run-bids-validation" key is missing from the gear_options,
+    # "--skip-bids-validation" is in the returned command:
     if "run-bids-validation" not in gear_options:
         assert "--skip-bids-validation" in cmd
 
@@ -138,7 +139,8 @@ def test_run(
     my_cmd = ["echo", "Foo"]
     mock_generate_command.return_value = my_cmd
 
-    # main.run attempts to create the "destination-id" folder, so need to modify the default one:
+    # main.run attempts to create the "destination-id" folder, so need to modify the
+    # default one:
     foo_gear_options = mocked_gear_options
     foo_gear_options["output-dir"] = tmpdir / foo_gear_options["output-dir"]
     if dry_run:
@@ -166,7 +168,8 @@ def test_run_error(mock_generate_command, tmpdir, caplog, mocked_gear_options):
     my_cmd = ["ohce", "Foo"]
     mock_generate_command.return_value = my_cmd
 
-    # main.run attempts to create the "destination-id" folder, so need to modify the default one:
+    # main.run attempts to create the "destination-id" folder, so need to modify the
+    # default one:
     foo_gear_options = mocked_gear_options
     foo_gear_options["output-dir"] = tmpdir / foo_gear_options["output-dir"]
 

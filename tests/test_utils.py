@@ -33,8 +33,9 @@ def test_pretend_it_ran(tmpdir, caplog, search_caplog_contains, mocked_gear_opti
 
     mocked_app_options = {"foo": "bar"}
 
-    # pretend_it_ran will create the folders "work" and "output" in the WORKDIR (/flywheel/v0).
-    # So the files created there are deleted after running the test, link those folders to "tmpdir"
+    # pretend_it_ran will create the folders "work" and "output" in the WORKDIR
+    # (/flywheel/v0). So that the files created there are deleted after running the
+    # test, link those folders to "tmpdir"
     expected_folders = ["work", "output"]
     for ef in expected_folders:
         symlink(ef, tmpdir / ef)

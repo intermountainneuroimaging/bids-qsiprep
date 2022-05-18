@@ -118,17 +118,16 @@ def test_post_run(
     else:
         assert not os.path.isdir(analysis_output_dir)
 
-    # Make sure there is a "Previous warnings" entry in the log, with a list of the mocked_warnings:
+    # Make sure there is a "Previous warnings" entry in the log, with a list of the
+    # mocked_warnings:
     assert all(
-        [
-            search_caplog_contains(caplog, "Previous warnings", w)
-            for w in mocked_warnings
-        ]
+        search_caplog_contains(caplog, "Previous warnings", w) for w in mocked_warnings
     )
 
-    # Make sure there is a "Previous errors" entry in the log, with a list of the mocked_errors:
+    # Make sure there is a "Previous errors" entry in the log, with a list of the
+    # mocked_errors:
     assert all(
-        [search_caplog_contains(caplog, "Previous errors", e) for e in mocked_errors]
+        search_caplog_contains(caplog, "Previous errors", e) for e in mocked_errors
     )
 
 
@@ -163,7 +162,8 @@ def test_main(
     mocked_app_options = {"participant_label": ""}
     mocked_parse_config_return = (False, mocked_gear_options, mocked_app_options)
 
-    # We expect 'main' to get the subject label from the hierarchy, and strip the "sub-" prefix:
+    # We expect 'main' to get the subject label from the hierarchy, and strip the
+    # "sub-" prefix:
     expected_app_options = {"participant_label": MOCKED_SUBJECT_LABEL[len("sub-") :]}
 
     if errors == "prepare_errors":

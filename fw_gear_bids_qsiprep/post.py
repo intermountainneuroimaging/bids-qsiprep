@@ -12,13 +12,13 @@ def post_run(
     errors: List[str],
     warnings: List[str],
 ):
-    """Move all the results to the final destination, write out any
-    metadata, clean-up, etc.
+    """Final tasks.
+
+    Move all the results to the final destination, write out any metadata, clean-up,...
 
     Different for FW and RL instances
     Parts might be BIDS-App specific (the results), parts will be common
     (reporting errors, clean-up, etc.)
     """
-
     # do nothing, for now
     pass

@@ -19,7 +19,8 @@ def generate_command(
 ) -> List[str]:
     """Build the main command line command to run.
 
-    This method should be the same for FW and XNAT instances. It is also BIDS-App generic.
+    This method should be the same for FW and XNAT instances. It is also BIDS-App
+    generic.
 
     Args:
         gear_options (dict): options for the gear, from config.json
@@ -28,9 +29,9 @@ def generate_command(
     Returns:
         cmd (list of str): command to execute
     """
-
-    # Common to all BIDS Apps (https://github.com/BIDS-Apps), start with the command itself and the
-    # 3 positional args: bids path, output dir, analysis-level ("participant"/"group")
+    # Common to all BIDS Apps (https://github.com/BIDS-Apps), start with the command
+    # itself and the 3 positional args: bids path, output dir, analysis-level
+    # ("participant"/"group").
     # This should be done here in case there are nargs='*' arguments
     # (PV: Not sure if this is the case anymore. Their template seems to
     # suggest so, but not the general documentation.)
@@ -63,14 +64,15 @@ def generate_command(
 
     for ii, cc in enumerate(cmd):
         if cc.startswith("--verbose"):
-            # The app takes a "-v/--verbose" boolean flag (either present or not), while the config
-            # verbose argument would be "--verbose=v".
+            # The app takes a "-v/--verbose" boolean flag (either present or not),
+            # while the config verbose argument would be "--verbose=v".
             # So replace "--verbose=<v|vv|vvv>' with '-<v|vv|vvv>':
             cmd[ii] = "-" + cc.split("=")[1]
 
         elif " " in cc:
-            # When there are spaces in an element of the list, it means that the argument is a space-separated
-            # list, so take out the "=" separating the argument from the value. e.g.:
+            # When there are spaces in an element of the list, it means that the
+            # argument is a space-separated list, so take out the "=" separating the
+            # argument from the value. e.g.:
             #     "--foo=bar fam" -> "--foo bar fam"
             # this allows argparse "nargs" to work properly
             cmd[ii] = cc.replace("=", " ")
@@ -99,8 +101,8 @@ def prepare(
         errors (list[str]): list of generated errors
         warnings (list[str]): list of generated warnings
     """
-
-    # for now, no errors or warnings, but leave this in place to allow future methods to return an error
+    # for now, no errors or warnings, but leave this in place to allow future methods
+    # to return an error
     errors = []
     warnings = []
 
@@ -108,7 +110,7 @@ def prepare(
 
 
 def run(gear_options: dict, app_options: dict) -> int:
-    """Run QSIPrep itself
+    """Run QSIPrep itself.
 
     Arguments:
         gear_options: dict with gear-specific options

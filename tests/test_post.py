@@ -11,12 +11,12 @@ def test_post_run(mocked_gear_options):
     """Unit tests for post_run"""
 
     post_run(
-        gear_name=f"foo",
+        gear_name="foo",
         gear_options=mocked_gear_options,
-        analysis_output_dir=Path(f"bar"),
-        run_label=f"fum",
+        analysis_output_dir=Path("bar"),
+        run_label="fum",
         errors=[],
         warnings=[],
     )
 
-    pass
+    assert True

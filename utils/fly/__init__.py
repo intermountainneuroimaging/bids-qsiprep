@@ -1,1 +1,1 @@
-# This is a comment to prevent CircleCI from considering the file as empty.
+"""Utils specific to running a gear in a Flywheel environment."""

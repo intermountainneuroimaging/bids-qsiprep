@@ -1,11 +1,15 @@
 # QSIprep Gear
-This gear runs [QSIprep](https://qsiprep.readthedocs.io/) on [BIDS-curated data](https://bids.neuroimaging.io/).
+This gear runs [QSIprep](https://qsiprep.readthedocs.io/) on
+[BIDS-curated data](https://bids.neuroimaging.io/).
 
-For a description of what QSIprep does, read the [official documentation](https://qsiprep.readthedocs.io/).  
+For a description of what QSIprep does, read the
+[official documentation](https://qsiprep.readthedocs.io/).  
 
-This gear runs the official [`pennbbl/qsiprep:0.15.1` Docker image](https://hub.docker.com/r/pennbbl/qsiprep)
+This gear runs the official
+[`pennbbl/qsiprep:0.15.1` Docker image](https://hub.docker.com/r/pennbbl/qsiprep)
 
-#### __Note__: `DOCKER_HUB` var in `.gitlab-ci.yml` has changed to `false`. By default, this should be set to `true`
+#### __Note__: `DOCKER_HUB` var in `.gitlab-ci.yml` has changed to `false`. By default
+this should be set to `true`
 
 # Import Metadata (import-metadata)
 
@@ -15,12 +19,13 @@ This gear runs the official [`pennbbl/qsiprep:0.15.1` Docker image](https://hub.
 *{Link To FAQ}*
 
 ### Summary
-`qsiprep` configures pipelines for processing diffusion-weighted MRI (dMRI) data. The main features of this software are:
+`qsiprep` configures pipelines for processing diffusion-weighted MRI (dMRI) data. The main
+features of this software are:
 
   1. A BIDS-app approach to preprocessing nearly all kinds of modern diffusion MRI data.
   2. Automatically generated preprocessing pipelines that correctly group, distortion correct,
-     motion correct, denoise, coregister and resample your scans, producing visual reports and
-     QC metrics.
+     motion correct, denoise, coregister and resample your scans, producing visual reports
+     and QC metrics.
   3. A system for running state-of-the-art reconstruction pipelines that include algorithms
      from Dipy_, MRTrix_, `DSI Studio`_  and others.
   4. A novel motion correction algorithm that works on DSI and random q-space sampling schemes
@@ -121,7 +126,8 @@ If possible, list as many specific metadata objects that are required:
     - Level: *{Container level that metadata is at}*
 
 ## Usage
-This section provides a more detailed description of the gear, including not just WHAT it does, but HOW it works in flywheel
+This section provides a more detailed description of the gear, including not just WHAT
+it does, but HOW it works in flywheel
 
 ### Description
 *{A detailed description of how the gear works}*
@@ -156,7 +162,8 @@ Description of workflow
 1. Geat places output in Analysis
     
 ### Use Cases
-This section is very gear dependent, and covers a detailed walkthrough of some use cases.  Should include Screenshots, example files, etc.
+This section is very gear dependent, and covers a detailed walkthrough of some use cases.
+Should include Screenshots, example files, etc.
 
 #### Use Case 1
 ***Conditions***:
