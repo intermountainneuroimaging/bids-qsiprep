@@ -32,7 +32,8 @@ Dependencies are listed in the `pyproject.toml` file.
   * Update dry run: `--dry-run`
 
 #### Using a different version of python
-Poetry manages virtual environments and can create a virtual environment with different versions of python, however that version must be installed on the machine.  
+Poetry manages virtual environments and can create a virtual environment with
+different versions of python, however that version must be installed on the machine.  
 
 You can configure the python version by using `poetry env use <path/to/executable>`
 
@@ -46,7 +47,8 @@ inside project directory
 * `poetry config virtualenvs.path <path>`: Path to virtual environment directory.
 
 ## Linting and Testing
-Local linting and testing scripts are managed through [`pre-commit`](https://pre-commit.com/).  
+Local linting and testing scripts are managed through
+[`pre-commit`](https://pre-commit.com/).
 Pre-commit allows running hooks which can be defined locally, or in other 
 repositories. Default hooks to run on each commit:
 
