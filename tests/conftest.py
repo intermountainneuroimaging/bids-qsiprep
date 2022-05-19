@@ -109,7 +109,7 @@ def check_for_fw_key():
             TestCase.skipTest("", f"{str(user_json)} file not found.")
 
         # Check API key is present:
-        with open(user_json, "r") as f:
+        with open(user_json, "r", encoding="utf8") as f:
             j = json.load(f)
         if "key" not in j or not j["key"]:
             TestCase.skipTest("", f"No API key available in {str(user_json)}")

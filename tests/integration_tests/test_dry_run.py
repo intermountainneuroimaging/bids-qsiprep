@@ -43,7 +43,7 @@ def test_dry_run_works(
         # add the "custom" and "name" fields to the context (get it from the
         # manifest.json), in case the job specified in the config.json in the zip file
         # doesn't have those fields:
-        with open(FWV0 / "manifest.json", "r") as f:
+        with open(FWV0 / "manifest.json", "r", encoding="utf8") as f:
             manifest = json.load(f)
         for key in ["custom", "name"]:
             if key not in gtk_context.manifest:

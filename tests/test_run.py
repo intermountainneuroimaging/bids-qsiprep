@@ -68,7 +68,7 @@ def test_post_run(
     mock_zip_intermediate_selected,
     mock_zip_all_intermediate_output,
     mock_zip_htmls,
-    mock_zip_output,
+    _,
     tmpdir,
     caplog,
     search_caplog_contains,
