@@ -15,7 +15,7 @@ def parse_config(
         gear_options: options for the gear
         app_options: options to pass to the app
     """
-    """   Gear config   """
+    # ##   Gear config   ## #
 
     gear_options = {
         "bids-app-binary": gear_context.manifest.get("custom").get("bids-app-binary"),
@@ -40,9 +40,10 @@ def parse_config(
         "client": gear_context.client,
     }
 
-    """   App options:
+    # ##   App options:   ## #
 
-     Notes on inputs:  These notes follow the input order as documented here:
+    # pylint: disable=pointless-string-statement
+    """ Notes on inputs:  These notes follow the input order as documented here:
      https://qsiprep.readthedocs.io/en/latest/usage.html#command-line-arguments
 
     * Positional arguments are covered by the template
@@ -111,8 +112,8 @@ def parse_config(
     * reports-only: ADDED for ease of access
     All other options from the "Other Options" section are left out, as these can be
     passed into the "bids_app_args" section
-
     """
+    # pylint: enable=pointless-string-statement
 
     app_options_keys = [
         "bids_app_args",

@@ -10,7 +10,7 @@ from fw_gear_bids_qsiprep.main import run
 log = logging.getLogger(__name__)
 
 
-def make_dirs_and_files(files: List[Union[str, Path]]) -> None:
+def make_dirs_and_files(files: Union[List[str], List[Path]]) -> None:
     """Create directories and touch files.
 
     Args:
