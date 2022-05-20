@@ -8,16 +8,13 @@ from utils.fly.set_performance_config import set_mem_gb, set_n_cpus
 
 def parse_config(
     gear_context: GearToolkitContext,
-) -> Tuple[bool, dict, dict]:
+) -> Tuple[dict, dict]:
     """Parse the config and other options from the context, both gear and app options.
 
     Returns:
-        debug: debug flag
         gear_options: options for the gear
         app_options: options to pass to the app
     """
-    debug = gear_context.config.get("debug")
-
     """   Gear config   """
 
     gear_options = {
@@ -181,4 +178,4 @@ def parse_config(
     # Note: Is it possible to validate directly against the QSIprep parser?
     # (https://github.com/PennLINC/qsiprep/blob/0.15.1/qsiprep/cli/run.py#L76-L517)
 
-    return debug, gear_options, app_options
+    return gear_options, app_options

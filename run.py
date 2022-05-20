@@ -193,7 +193,7 @@ def main(context: GearToolkitContext) -> None:
 
     # Call the fw_gear_bids_qsiprep.parser.parse_config function
     # to extract the args, kwargs from the context (e.g. config.json).
-    debug, gear_options, app_options = parse_config(context)
+    gear_options, app_options = parse_config(context)
 
     # TO-DO: install_freesurfer_license from the gear_toolkit takes the gear context as
     #    an argument, so it is only valid for FW instances. However, the functionality
