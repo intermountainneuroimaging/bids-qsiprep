@@ -176,7 +176,7 @@ Should include Screenshots, example files, etc.
 
 #### Use Case 1
 
-***Conditions***:
+*__Conditions__*:
 
 - *{A list of conditons that result in this use case}*
 - [ ] Possibly a list of check boxes indicating things that are absent

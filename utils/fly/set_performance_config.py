@@ -53,7 +53,7 @@ def set_mem_gb(mem_gb):
     """
     # TO-DO: maybe we should modify "set_mem_gb" so that we never go above 90-95% of
     #  the available mem in the system
-    psutil_mem_gb = int(psutil.virtual_memory().available / (1024 ** 3))
+    psutil_mem_gb = int(psutil.virtual_memory().available / (1024**3))
     log.info(f"psutil.virtual_memory().available= {psutil_mem_gb:5.2f} GiB")
     if mem_gb:
         if mem_gb > psutil_mem_gb:

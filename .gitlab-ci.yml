@@ -1,8 +1,9 @@
 include:
-  - project: flywheel-io/flywheel-apps/utils/ci-templates
-    ref: 4472a37cc1b11ce72d8f3d2fdefd6015fc359e2f
-    file: poetry-pre-commit.yml
+  - project: flywheel-io/tools/etc/qa-ci
+    ref: 04c696510b2dd6e38fffb5cf0ed6f737ac6ccc35
+    file: ci/gears.yml
 
-variables:
-  PYPI: "false"         # default is "false" in poetry-pre-commit.yml
-  DOCKER_HUB: "false"    # default is "true" in poetry-pre-commit.yml
+publish:poetry:
+  variables:
+    # Set to true to publish to pip on tags
+    PUBLISH_POETRY: "false"
