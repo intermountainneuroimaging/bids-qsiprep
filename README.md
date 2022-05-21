@@ -14,9 +14,9 @@ should be set to `true`
 
 ## Overview
 
-[Usage](#Usage)
+[Usage](#usage)
 
-[FAQ](#FAQ)
+[FAQ](#faq)
 
 ### Summary
 
