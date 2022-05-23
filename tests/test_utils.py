@@ -5,8 +5,6 @@ from os import path as op
 from os import symlink
 from pathlib import Path
 
-import pytest
-
 from utils import dry_run
 
 

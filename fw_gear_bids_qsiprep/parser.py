@@ -8,17 +8,14 @@ from utils.fly.set_performance_config import set_mem_gb, set_n_cpus
 
 def parse_config(
     gear_context: GearToolkitContext,
-) -> Tuple[bool, dict, dict]:
+) -> Tuple[dict, dict]:
     """Parse the config and other options from the context, both gear and app options.
 
     Returns:
-        debug: debug flag
         gear_options: options for the gear
         app_options: options to pass to the app
     """
-    debug = gear_context.config.get("debug")
-
-    """   Gear config   """
+    # ##   Gear config   ## #
 
     gear_options = {
         "bids-app-binary": gear_context.manifest.get("custom").get("bids-app-binary"),
@@ -43,9 +40,10 @@ def parse_config(
         "client": gear_context.client,
     }
 
-    """   App options:
+    # ##   App options:   ## #
 
-     Notes on inputs:  These notes follow the input order as documented here:
+    # pylint: disable=pointless-string-statement
+    """ Notes on inputs:  These notes follow the input order as documented here:
      https://qsiprep.readthedocs.io/en/latest/usage.html#command-line-arguments
 
     * Positional arguments are covered by the template
@@ -114,8 +112,8 @@ def parse_config(
     * reports-only: ADDED for ease of access
     All other options from the "Other Options" section are left out, as these can be
     passed into the "bids_app_args" section
-
     """
+    # pylint: enable=pointless-string-statement
 
     app_options_keys = [
         "bids_app_args",
@@ -181,4 +179,4 @@ def parse_config(
     # Note: Is it possible to validate directly against the QSIprep parser?
     # (https://github.com/PennLINC/qsiprep/blob/0.15.1/qsiprep/cli/run.py#L76-L517)
 
-    return debug, gear_options, app_options
+    return gear_options, app_options

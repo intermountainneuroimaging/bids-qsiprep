@@ -97,6 +97,7 @@ def get_bids_data(
     return hierarchy["subject_label"], run_label, errors
 
 
+# pylint: disable=too-many-arguments
 def post_run(
     gear_name: str,
     gear_options: dict,
@@ -183,6 +184,10 @@ def post_run(
         log.info(msg)
 
 
+# pylint: enable=too-many-arguments
+
+
+# pylint: disable=too-many-locals
 def main(context: GearToolkitContext) -> None:
     """Parses config and run."""
     # Errors and warnings will always be logged when they are detected.
@@ -193,7 +198,7 @@ def main(context: GearToolkitContext) -> None:
 
     # Call the fw_gear_bids_qsiprep.parser.parse_config function
     # to extract the args, kwargs from the context (e.g. config.json).
-    debug, gear_options, app_options = parse_config(context)
+    gear_options, app_options = parse_config(context)
 
     # TO-DO: install_freesurfer_license from the gear_toolkit takes the gear context as
     #    an argument, so it is only valid for FW instances. However, the functionality
@@ -217,10 +222,11 @@ def main(context: GearToolkitContext) -> None:
     warnings += prepare_warnings
 
     if len(errors) == 0:
+        tree_title = f"{sanitize_filename(gear_options['bids-app-binary'])} BIDS Tree"
         subject_label, run_label, get_bids_errors = get_bids_data(
             context=context,
             gear_options=gear_options,
-            tree_title=f"{sanitize_filename(gear_options['bids-app-binary'])} BIDS Tree",
+            tree_title=tree_title,
         )
         errors += get_bids_errors
 
@@ -268,12 +274,12 @@ def main(context: GearToolkitContext) -> None:
             log.exception("Unable to execute command.")
 
         else:
-            # Placeholder for saving metadata.
+            # TO-DO: Placeholder for saving metadata.
             # We want to save the metadata only if the run was successful.
             # We want to save partial outputs in the event of the app crashing, because
             # the partial outputs can help pinpoint what the exact problem was. So we
-            # have `post_run` under "finally"
-            save_metadata = True
+            # have `post_run` further down.
+            pass
 
     # post_run should be run regardless of dry-run or exit code.
     output_analysis_id_dir = Path(gear_options["output-dir"]) / Path(
@@ -300,6 +306,9 @@ def main(context: GearToolkitContext) -> None:
     # Exit the python script (and thus the container) with the exit
     # code returned by fw_gear_bids_qsiprep.main.run function.
     sys.exit(e_code)
+
+
+# pylint: enable=too-many-locals
 
 
 # Only execute if file is run as main, not when imported by another module

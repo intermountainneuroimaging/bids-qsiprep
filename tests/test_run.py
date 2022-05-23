@@ -160,7 +160,7 @@ def test_main(
 
     mocked_gear_options["analysis-level"] = "participant"
     mocked_app_options = {"participant_label": ""}
-    mocked_parse_config_return = (False, mocked_gear_options, mocked_app_options)
+    mocked_parse_config_return = (mocked_gear_options, mocked_app_options)
 
     # We expect 'main' to get the subject label from the hierarchy, and strip the
     # "sub-" prefix:

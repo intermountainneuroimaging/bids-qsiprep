@@ -101,12 +101,14 @@ def prepare(
         errors (list[str]): list of generated errors
         warnings (list[str]): list of generated warnings
     """
+    # pylint: disable=unused-argument
     # for now, no errors or warnings, but leave this in place to allow future methods
     # to return an error
-    errors = []
-    warnings = []
+    errors: List[str] = []
+    warnings: List[str] = []
 
     return errors, warnings
+    # pylint: enable=unused-argument
 
 
 def run(gear_options: dict, app_options: dict) -> int:
