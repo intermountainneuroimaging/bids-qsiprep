@@ -35,7 +35,7 @@ def test_start_run(
     Shorten the run by using the "timeout" shell command (allowed_run_time_min minutes)
     By allowing it to start the actual run, we make sure that the gear installs the
     FreeSurfer license, downloads real data, runs the validator on them and starts the
-    qsiprep processing.
+    qsiprep processing. Minimum time required for these steps is 3 minutes.
     """
 
     caplog.set_level(logging.DEBUG)
