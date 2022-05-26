@@ -7,3 +7,8 @@ publish:poetry:
   variables:
     # Set to true to publish to pip on tags
     PUBLISH_POETRY: "false"
+
+.extend:dind:
+  tags:
+    - build-cluster-external
+    - docker
