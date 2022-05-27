@@ -23,6 +23,9 @@ log = logging.getLogger(__name__)
 allowed_run_time_min = 3
 
 
+@pytest.mark.skipif(
+    not Path("/flywheel/v0/").is_dir(), reason="Only for testing inside container"
+)
 def test_start_run(
     tmpdir,
     caplog,
@@ -37,7 +40,6 @@ def test_start_run(
     FreeSurfer license, downloads real data, runs the validator on them and starts the
     qsiprep processing. Minimum time required for these steps is 3 minutes.
     """
-
     caplog.set_level(logging.DEBUG)
 
     # check for API key:

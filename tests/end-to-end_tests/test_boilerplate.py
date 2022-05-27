@@ -21,6 +21,9 @@ FWV0 = Path.cwd()
 log = logging.getLogger(__name__)
 
 
+@pytest.mark.skipif(
+    not Path("/flywheel/v0/").is_dir(), reason="Only for testing inside container"
+)
 def test_boilerplate_run(
     tmpdir,
     caplog,

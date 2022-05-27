@@ -92,6 +92,10 @@ When contributing, make a Merge Request against the main branch.
 
 ### Merge requests
 
+__Note__ that the `end-to-end_tests` and `integration_tests` require an API key, so
+they are skipped in the GitLab CI run. So please make sure they run locally before
+creating your Merge Request.
+
 The merge request should contain at least two things:
 
 1. Your relevant change
