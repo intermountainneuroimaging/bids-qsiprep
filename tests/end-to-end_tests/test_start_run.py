@@ -1,5 +1,9 @@
-""" This "dry run" integration test doesn't download any data, but copies it from the
-provided zip file and then pretends it runs the BIDS-App command.
+""" This integration test downloads a sample dataset from ga.ce.flywheel.io and then
+starts a run of the BIDS-App
+
+Because even if we used the "--sloppy" option and low resolution data, a full run takes
+about 10 hrs., we execute the call with "timeout" and a customizable time (set in the
+"allowed_run_time_min" global)
 """
 
 import json
@@ -7,7 +11,6 @@ import logging
 from glob import glob
 from os import chdir
 from pathlib import Path
-from unittest.mock import patch
 
 import pytest
 
@@ -17,22 +20,32 @@ FWV0 = Path.cwd()
 
 log = logging.getLogger(__name__)
 
+allowed_run_time_min = 3
 
-def test_dry_run_works(
+
+@pytest.mark.skipif(
+    not Path("/flywheel/v0/").is_dir(), reason="Only for testing inside container"
+)
+def test_start_run(
     tmpdir,
     caplog,
     install_gear_results,
     search_caplog_contains,
     check_for_fw_key,
 ):
-    """Test a dry run"""
+    """Test a real run of the BIDS-App
 
+    Shorten the run by using the "timeout" shell command (allowed_run_time_min minutes)
+    By allowing it to start the actual run, we make sure that the gear installs the
+    FreeSurfer license, downloads real data, runs the validator on them and starts the
+    qsiprep processing. Minimum time required for these steps is 3 minutes.
+    """
     caplog.set_level(logging.DEBUG)
 
     # check for API key; if not found, it skips this test:
     check_for_fw_key(Path.home() / ".config/flywheel/user.json")
 
-    zip_filename = Path("dry_run.zip")
+    zip_filename = Path("start_run.zip")
     install_gear_results(zip_filename, tmpdir)
     # the "install_gear_results" unzips the contents of 'zip_filename' into a folder of
     # the same name:
@@ -48,18 +61,24 @@ def test_dry_run_works(
         for key in ["custom", "name"]:
             if key not in gtk_context.manifest:
                 gtk_context.manifest[key] = manifest[key]
+        # Override the "bids-app-binary" so that it times out after a certain time.
+        # This allows us to check that the call works and qsiprep starts running.
+        bids_app_binary = gtk_context.manifest["custom"].get("bids-app-binary")
+        gtk_context.manifest["custom"][
+            "bids-app-binary"
+        ] = f"timeout {allowed_run_time_min}m {bids_app_binary}"
 
-        # call run.main, patching install_freesurfer_license:
-        with pytest.raises(SystemExit) as pytest_exit, patch(
-            "run.install_freesurfer_license"
-        ):
+        with pytest.raises(SystemExit) as pytest_exit:
             run.main(gtk_context)
 
-    assert pytest_exit.value.code == 0
+    # Because it timed-out, the command will not return success, but the log will have
+    # the code returned by "timeout" (= 124)
+    assert pytest_exit.value.code == 1
+    assert search_caplog_contains(caplog, "Command return code: 124")
     assert (tmpdir / zip_filename.stem / "work" / "bids" / ".bidsignore").exists()
-    assert search_caplog_contains(caplog, "Not running BIDS validation")
+    assert search_caplog_contains(caplog, "No BIDS errors detected.")
+    assert search_caplog_contains(caplog, "Downloading BIDS data was successful")
     assert search_caplog_contains(caplog, "Executing command", "participant")
-    assert search_caplog_contains(caplog, "Executing command", "arg1 arg2")
     assert search_caplog_contains(caplog, "Zipping work directory")
     assert search_caplog_contains(caplog, "Zipping work/bids/dataset_description.json")
     assert search_caplog_contains(caplog, "Zipping work/bids/sub-")
@@ -71,5 +90,4 @@ def test_dry_run_works(
             / f"bids-qsiprep_*{gtk_context.destination['id']}.zip"
         )
     )
-    assert search_caplog_contains(caplog, "Warning: gear-dry-run is set")
     # assert (tmpdir / zip_filename.stem / "output" / ".metadata.json").exists()

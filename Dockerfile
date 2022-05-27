@@ -1,8 +1,9 @@
+FROM pennbbl/qsiprep:0.15.4 as base
 # the qsiprep image is huge (11.6 GB), so the GitLab CI tests fail to even
 # download it with the error: "no space left on device".
-# For now I'm going to use a vanilla Python, so that I can push commits.
-#FROM pennbbl/qsiprep:0.15.1 as base
-FROM python:3.8.10-slim-buster as base
+# To create the main functionality of the gear, just comment out the previous "FROM" line
+# and uncomment this line (to use a vanilla Python):
+#FROM python:3.8.10-slim-buster as base
 
 LABEL maintainer="support@flywheel.io"
 
@@ -10,10 +11,7 @@ ENV FLYWHEEL="/flywheel/v0"
 WORKDIR ${FLYWHEEL}
 
 # Dev install. git for pip editable install.
-# hadolint ignore=DL3008
-RUN apt-get update && apt-get install --no-install-recommends -y git && \
-    apt-get clean && \
-    pip install --no-cache-dir "poetry==1.1.2" && \
+RUN pip install --no-cache-dir "poetry==1.1.2" && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Installing main dependencies

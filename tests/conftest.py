@@ -102,8 +102,12 @@ def search_caplog_contains():
 @pytest.fixture
 def check_for_fw_key():
     def _method(user_json):
-        """Check that there is a $HOME/.config/flywheel/user.json file, and that
-        it contains a "key" entry (for FW's API)"""
+        """Check for FW's API key in $HOME/.config/flywheel/user.json.
+
+        Check that there is a $HOME/.config/flywheel/user.json file, and that it
+        contains a "key" entry (for FW's API). If not found, the test using this
+        fixture is skipped.
+        """
 
         if not user_json.exists():
             TestCase.skipTest("", f"{str(user_json)} file not found.")
