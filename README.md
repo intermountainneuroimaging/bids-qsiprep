@@ -9,9 +9,6 @@ For a description of what QSIprep does, read the
 This gear runs the official
 [`pennbbl/qsiprep:0.15.1` Docker image](https://hub.docker.com/r/pennbbl/qsiprep)
 
-__Note__: `DOCKER_HUB` var in `.gitlab-ci.yml` has changed to `false`. By default, this
-should be set to `true`
-
 ## Overview
 
 [Usage](#usage)
