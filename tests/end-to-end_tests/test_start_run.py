@@ -42,7 +42,7 @@ def test_start_run(
     """
     caplog.set_level(logging.DEBUG)
 
-    # check for API key:
+    # check for API key; if not found, it skips this test:
     check_for_fw_key(Path.home() / ".config/flywheel/user.json")
 
     zip_filename = Path("start_run.zip")
