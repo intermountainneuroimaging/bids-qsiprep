@@ -158,7 +158,6 @@ def test_main(
     logging.getLogger(__name__)
     caplog.set_level(logging.INFO)
 
-    mocked_gear_options["analysis-level"] = "participant"
     mocked_app_options = {"participant_label": ""}
     mocked_parse_config_return = (mocked_gear_options, mocked_app_options)
 
@@ -219,3 +218,19 @@ def test_main(
         mock_run.assert_called_once()
         mock_post_run.assert_called_once()
         assert [rec.levelno == logging.CRITICAL for rec in caplog.records]
+
+
+def test_run_at_project_level_fails(mocked_context_for_project_level, caplog):
+    """Check that if the destination parent is a project, the gear doesn't run.
+
+    This is to say that the gear won't run if launched at the project level.
+    """
+
+    with pytest.raises(SystemExit):
+        run.main(mocked_context_for_project_level)
+
+    assert any(
+        "gear does not run at the project level" in rec.message
+        for rec in caplog.records
+        if rec.levelno == logging.ERROR
+    )

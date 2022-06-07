@@ -187,9 +187,18 @@ def post_run(
 # pylint: enable=too-many-arguments
 
 
-# pylint: disable=too-many-locals
+# pylint: disable=too-many-locals,too-many-statements
 def main(context: GearToolkitContext) -> None:
     """Parses config and run."""
+    # For now, don't allow runs at the project level:
+    destination = context.client.get(context.destination["id"])
+    if destination.parent.type == "project":
+        log.exception(
+            "This version of the gear does not run at the project level. "
+            "Try running it for each individual subject."
+        )
+        sys.exit(1)
+
     # Errors and warnings will always be logged when they are detected.
     # Keep a list of errors and warning to print all in one place at end of log
     # Any errors will prevent the BIDS App from running.
@@ -308,7 +317,7 @@ def main(context: GearToolkitContext) -> None:
     sys.exit(e_code)
 
 
-# pylint: enable=too-many-locals
+# pylint: enable=too-many-locals,too-many-statements
 
 
 # Only execute if file is run as main, not when imported by another module
