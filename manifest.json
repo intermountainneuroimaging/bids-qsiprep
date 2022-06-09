@@ -253,11 +253,6 @@
       "type": "boolean",
       "optional": true
     },
-    "participant_label": {
-      "description": "[PARTICIPANT_LABEL [PARTICIPANT_LABEL ...]]",
-      "optional": true,
-      "type": "string"
-    },
     "verbose": {
       "default": "v",
       "description": "increases log verbosity for each occurrence, debug level is -vvv",

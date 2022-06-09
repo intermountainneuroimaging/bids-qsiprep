@@ -16,6 +16,7 @@ from flywheel_gear_toolkit.utils.zip_tools import unzip_archive
 @pytest.fixture
 def mocked_gear_options():
     return {
+        "analysis-level": "participant",
         "bids-app-binary": "f00_binary",
         "bids-app-modalities": ["foo", "bar"],
         "dry-run": False,
@@ -27,17 +28,45 @@ def mocked_gear_options():
 
 
 @pytest.fixture
-def mocked_context(mocked_gear_options):
+def mocked_acquisition():
+    def _my_mock(parent_type="session"):
+        """Return a mocked acquisition with a specific parent.type"""
+        my_acquisition = MagicMock()
+        my_acquisition.parent.type = parent_type
+        return my_acquisition
+
+    return _my_mock
+
+
+@pytest.fixture
+def mocked_context(mocked_gear_options, mocked_acquisition):
     """Return a mocked GearToolkitContext"""
     mocked_manifest = {
         "name": "test",
         "custom": {"gear-builder": {"image": "foo/bar:v1.0"}},
     }
+    mocked_destination_id = mocked_gear_options["destination-id"]
     return MagicMock(
         spec=GearToolkitContext,
         manifest=mocked_manifest,
-        client="",
-        destination={"id": mocked_gear_options["destination-id"]},
+        client={mocked_destination_id: mocked_acquisition()},
+        destination={"id": mocked_destination_id},
+    )
+
+
+@pytest.fixture
+def mocked_context_for_project_level(mocked_gear_options, mocked_acquisition):
+    """Return a mocked GearToolkitContext with a "project" destination parent."""
+    mocked_manifest = {
+        "name": "test",
+        "custom": {"gear-builder": {"image": "foo/bar:v1.0"}},
+    }
+    mocked_destination_id = mocked_gear_options["destination-id"]
+    return MagicMock(
+        spec=GearToolkitContext,
+        manifest=mocked_manifest,
+        client={mocked_destination_id: mocked_acquisition("project")},
+        destination={"id": mocked_destination_id},
     )
 
 
