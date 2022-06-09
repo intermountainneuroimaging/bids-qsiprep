@@ -49,7 +49,7 @@ def parse_config(
     * Positional arguments are covered by the template
     * version: SKIPPED, can be passed in as a gear argument
     * skip-bids-validation: SKIPPED combined with the template's "run_validation"
-    * participant-label: SKIPPED handled by the template
+    * participant-label: SKIPPED extracted from parent container
     * acquisition_type: ADDED  but it may be handled by the template, not sure what it
         does
     * bids-database-dir:
@@ -156,7 +156,6 @@ def parse_config(
         "use-syn-sdc",
         "force-syn",
         "reports-only",
-        "participant_label",
         "n_cpus",
         "mem_mb",
         "write-graph",

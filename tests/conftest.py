@@ -16,6 +16,7 @@ from flywheel_gear_toolkit.utils.zip_tools import unzip_archive
 @pytest.fixture
 def mocked_gear_options():
     return {
+        "analysis-level": "participant",
         "bids-app-binary": "f00_binary",
         "bids-app-modalities": ["foo", "bar"],
         "dry-run": False,

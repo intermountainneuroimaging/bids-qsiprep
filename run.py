@@ -240,10 +240,9 @@ def main(context: GearToolkitContext) -> None:
         errors += get_bids_errors
 
         # For BIDS-Apps that run at the participant level, set the
-        # "participant_label" (if not set in the options).
-        if (
-            gear_options["analysis-level"] == "participant"
-            and not app_options["participant_label"]
+        # "participant_label" from the container from which it was launched.
+        if gear_options["analysis-level"] == "participant" and not app_options.get(
+            "participant_label", ""
         ):
             app_options["participant_label"] = subject_label
 
