@@ -20,6 +20,7 @@ def parse_config(
 
     gear_options = {
         "bids-app-binary": gear_context.manifest.get("custom").get("bids-app-binary"),
+        # These are the BIDS modalities that will be downloaded from the instance
         "bids-app-modalities": gear_context.manifest.get("custom").get(
             "bids-app-modalities"
         ),

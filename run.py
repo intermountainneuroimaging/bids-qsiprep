@@ -32,8 +32,6 @@ from utils.dry_run import pretend_it_ran
 
 log = logging.getLogger(__name__)
 
-BIDS_APP = "qsiprep"
-
 # Default/fall-back folder for the FS license (in case ${FREESURFER_HOME} is not defined
 # in the environment:
 FREESURFER_HOME = "/opt/freesurfer"
@@ -189,7 +187,7 @@ def post_run(
 
 # pylint: disable=too-many-locals,too-many-statements
 def main(context: GearToolkitContext) -> None:
-    """Parses config and run."""
+    """Parses config and runs."""
     # For now, don't allow runs at the project level:
     destination = context.client.get(context.destination["id"])
     if destination.parent.type == "project":
