@@ -1,4 +1,5 @@
 """Parser module to parse gear config.json."""
+from pathlib import Path
 from typing import Tuple
 
 from flywheel_gear_toolkit import GearToolkitContext
@@ -39,6 +40,11 @@ def parse_config(
         "work-dir": gear_context.work_dir,
         "client": gear_context.client,
     }
+
+    # set the output dir name for the BIDS app:
+    gear_options["output_analysis_id_dir"] = Path(gear_options["output-dir"]) / Path(
+        gear_options["destination-id"]
+    )
 
     # ##   App options:   ## #
 

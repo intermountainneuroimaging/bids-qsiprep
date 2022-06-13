@@ -19,34 +19,36 @@ def test_generate_command(run_bids_validation, bids_app_args):
 
     desired_bids_app_binary = "my_bids_app"
     desired_analysis_level = "medium_rare"
+    desired_work_dir = "foo"
+    desired_output_analysis_id_dir = "bar"
     gear_options = {
         "bids-app-binary": desired_bids_app_binary,
         "analysis-level": desired_analysis_level,
-        "work-dir": Path("/foo"),
+        "work-dir": Path(desired_work_dir),
+        "output_analysis_id_dir": Path(desired_output_analysis_id_dir),
         "run-bids-validation": run_bids_validation,
     }
     app_options = {
         "bids_app_args": bids_app_args,
         "anat-only": True,
     }
-    output_analysis_id_dir = Path("")
 
     cmd = main.generate_command(
         gear_options,
         app_options,
-        output_analysis_id_dir,
     )
 
     # Check that the returned cmd:
     # - is a list of strings:
     assert isinstance(cmd, list)
     assert all(isinstance(c, str) for c in cmd)
-    # - the first item is the desired_bids_app_binary:
-    assert cmd[0] == desired_bids_app_binary
-    # - the third item is the output_dir:
-    assert cmd[2] == str(output_analysis_id_dir)
-    # - the fourth is the ANALYSIS_LEVEL:
-    assert cmd[3] == desired_analysis_level
+    # starts with the mandatory arguments:
+    assert cmd[0:4] == [
+        desired_bids_app_binary,
+        str(Path(desired_work_dir) / "bids"),
+        desired_output_analysis_id_dir,
+        desired_analysis_level,
+    ]
 
     # check that the bids_app_args are in the command:
     if bids_app_args:
@@ -71,27 +73,20 @@ def test_generate_command(run_bids_validation, bids_app_args):
     # TO-DO: Test the verbose level
 
 
-def test_generate_command_space_separated_argument():
+def test_generate_command_space_separated_argument(mocked_gear_options):
     """Test for the case that an argument value is a space-separated list"""
 
     space_separated_arg_value = "elem1 elem2 elem3"
     single_arg_value = "single"
-    gear_options = {
-        "bids-app-binary": "irrelevant",
-        "analysis-level": "also_irrelevant",
-        "work-dir": Path("/foo"),
-        "run-bids-validation": False,
-    }
+    mocked_gear_options["work-dir"] = Path("/foo")
     app_options = {
         "space-separated-option": space_separated_arg_value,
         "single-arg-value": single_arg_value,
     }
-    output_analysis_id_dir = Path("")
 
     cmd = main.generate_command(
-        gear_options,
+        mocked_gear_options,
         app_options,
-        output_analysis_id_dir,
     )
 
     # Check that all app_options are in the cmd:
@@ -143,6 +138,9 @@ def test_run(
     # default one:
     foo_gear_options = mocked_gear_options
     foo_gear_options["output-dir"] = tmpdir / foo_gear_options["output-dir"]
+    foo_gear_options["output_analysis_id_dir"] = (
+        tmpdir / foo_gear_options["output_analysis_id_dir"]
+    )
     if dry_run:
         foo_gear_options["dry-run"] = True
 
@@ -150,9 +148,7 @@ def test_run(
 
     assert exit_code == 0
     mock_generate_command.assert_called_once()
-    assert os.path.exists(
-        Path(foo_gear_options["output-dir"]) / Path(foo_gear_options["destination-id"])
-    )
+    assert os.path.exists(foo_gear_options["output_analysis_id_dir"])
     # Check that there is a record in the log with "Executing command" and my_cmd.
     # This shows that "exec_command" was run with the expected command.
     assert search_caplog_contains(caplog, "Executing command", " ".join(my_cmd))
@@ -172,6 +168,9 @@ def test_run_error(mock_generate_command, tmpdir, caplog, mocked_gear_options):
     # default one:
     foo_gear_options = mocked_gear_options
     foo_gear_options["output-dir"] = tmpdir / foo_gear_options["output-dir"]
+    foo_gear_options["output_analysis_id_dir"] = (
+        tmpdir / foo_gear_options["output_analysis_id_dir"]
+    )
 
     # We expect a runtime error:
     with pytest.raises(RuntimeError):

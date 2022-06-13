@@ -15,7 +15,7 @@ from flywheel_gear_toolkit.utils.zip_tools import unzip_archive
 
 @pytest.fixture
 def mocked_gear_options():
-    return {
+    mock_options = {
         "analysis-level": "participant",
         "bids-app-binary": "f00_binary",
         "bids-app-modalities": ["foo", "bar"],
@@ -25,6 +25,10 @@ def mocked_gear_options():
         "run-bids-validation": False,
         "ignore-bids-errors": False,
     }
+    mock_options["output_analysis_id_dir"] = (
+        Path(mock_options["output-dir"]) / mock_options["destination-id"]
+    )
+    return mock_options
 
 
 @pytest.fixture

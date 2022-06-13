@@ -289,17 +289,14 @@ def main(context: GearToolkitContext) -> None:
             # have `post_run` further down.
             pass
 
-    # post_run should be run regardless of dry-run or exit code.
-    output_analysis_id_dir = Path(gear_options["output-dir"]) / Path(
-        gear_options["destination-id"]
-    )
     # Cleanup, move all results to the output directory.
+    # post_run should be run regardless of dry-run or exit code.
     # It will be run even in the event of an error, so that the partial results are
     # available for debugging.
     post_run(
         gear_name=context.manifest["name"],
         gear_options=gear_options,
-        analysis_output_dir=output_analysis_id_dir,
+        analysis_output_dir=str(gear_options["output_analysis_id_dir"]),
         run_label=run_label,
         errors=errors,
         warnings=warnings,
