@@ -15,7 +15,6 @@ log = logging.getLogger(__name__)
 def generate_command(
     gear_options: dict,
     app_options: dict,
-    output_dir: Path,
 ) -> List[str]:
     """Build the main command line command to run.
 
@@ -25,7 +24,6 @@ def generate_command(
     Args:
         gear_options (dict): options for the gear, from config.json
         app_options (dict): options for the app, from config.json
-        output_dir (path): directory where output will be saved
     Returns:
         cmd (list of str): command to execute
     """
@@ -38,7 +36,7 @@ def generate_command(
     cmd = [
         str(gear_options["bids-app-binary"]),
         str(gear_options["work-dir"] / "bids"),
-        str(output_dir),
+        str(gear_options["output_analysis_id_dir"]),
         str(gear_options["analysis-level"]),
     ]
 
@@ -127,9 +125,7 @@ def run(gear_options: dict, app_options: dict) -> int:
         gear_options["destination-id"]
     )
 
-    command = generate_command(
-        gear_options, app_options, output_dir=output_analysis_id_dir
-    )
+    command = generate_command(gear_options, app_options)
 
     # Create output directory
     log.info("Creating output directory %s", output_analysis_id_dir)

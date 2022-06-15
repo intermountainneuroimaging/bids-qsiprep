@@ -19,6 +19,7 @@ def parse_config(
 
     gear_options = {
         "bids-app-binary": gear_context.manifest.get("custom").get("bids-app-binary"),
+        # These are the BIDS modalities that will be downloaded from the instance
         "bids-app-modalities": gear_context.manifest.get("custom").get(
             "bids-app-modalities"
         ),
@@ -39,6 +40,11 @@ def parse_config(
         "work-dir": gear_context.work_dir,
         "client": gear_context.client,
     }
+
+    # set the output dir name for the BIDS app:
+    gear_options["output_analysis_id_dir"] = (
+        gear_options["output-dir"] / gear_options["destination-id"]
+    )
 
     # ##   App options:   ## #
 

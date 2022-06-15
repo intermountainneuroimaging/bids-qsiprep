@@ -218,6 +218,11 @@ def test_main(
         mock_run.assert_called_once()
         mock_post_run.assert_called_once()
         assert [rec.levelno == logging.CRITICAL for rec in caplog.records]
+        assert any(
+            "Unable to execute command." in rec.message
+            for rec in caplog.records
+            if rec.levelno == logging.ERROR
+        )
 
 
 def test_run_at_project_level_fails(mocked_context_for_project_level, caplog):
