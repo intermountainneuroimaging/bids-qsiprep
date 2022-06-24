@@ -131,6 +131,23 @@ def test_post_run(
     )
 
 
+# Test 2 use cases:
+# - extra_info: None/some dict:
+@pytest.mark.parametrize("extra_info", [None, {"foo": "bar"}])
+def test_save_metadata(mocked_context, extra_info):
+    """Test the save_metadata method"""
+    run.save_metadata(mocked_context, extra_info)
+    assert mocked_context.update_destination_metadata.called_once()
+    if extra_info:
+        # check that the extra_info was added to the update_destination_metadata call:
+        # (call_args[1] is the first argument of the
+        # "mocked_context.update_destination_metadata" call.)
+        assert all(
+            mocked_context.update_destination_metadata.call_args[1]["info"][k] == v
+            for k, v in extra_info.items()
+        )
+
+
 # Test 4 use cases:
 # - errors: None/prepare_errors/get_bids_data_errors/run_errors
 @pytest.mark.parametrize(
@@ -140,9 +157,11 @@ def test_post_run(
 @patch("run.prepare")
 @patch("run.get_bids_data")
 @patch("run.run")
+@patch("run.save_metadata")
 @patch("run.post_run")
 def test_main(
     mock_post_run,
+    mock_save_metadata,
     mock_run,
     mock_get_bids_data,
     mock_prepare,
@@ -196,6 +215,7 @@ def test_main(
     if errors is None:
         mock_get_bids_data.assert_called_once()
         mock_run.assert_called_once_with(mocked_gear_options, expected_app_options)
+        mock_save_metadata.assert_called_once()
         mock_post_run.assert_called_once()
 
     elif errors == "prepare_errors":
@@ -223,6 +243,55 @@ def test_main(
             for rec in caplog.records
             if rec.levelno == logging.ERROR
         )
+
+
+@patch("run.install_freesurfer_license")
+@patch("run.prepare")
+@patch("run.get_bids_data")
+@patch("run.pretend_it_ran")
+@patch("run.run")
+@patch("run.save_metadata")
+@patch("run.post_run")
+def test_main_dry_run(
+    mock_post_run,
+    mock_save_metadata,
+    mock_run,
+    mock_pretend_it_ran,
+    mock_get_bids_data,
+    mock_prepare,
+    mock_install_freesurfer_license,
+    mocked_gear_options,
+    mocked_context,
+):
+    """Unit tests for main when the dry_run option is set"""
+
+    mocked_app_options = {"participant_label": ""}
+    mocked_gear_options["dry-run"] = True
+    mocked_parse_config_return = (mocked_gear_options, mocked_app_options)
+
+    # We expect 'main' to get the subject label from the hierarchy, and strip the
+    # "sub-" prefix:
+    expected_app_options = {"participant_label": MOCKED_SUBJECT_LABEL[len("sub-") :]}
+
+    mock_prepare.return_value = ([], [])
+    mock_get_bids_data.return_value = (MOCKED_SUBJECT_LABEL, MOCKED_RUN_LABEL, [])
+    with pytest.raises(SystemExit):
+        with patch(
+            "run.parse_config", MagicMock(return_value=mocked_parse_config_return)
+        ):
+            run.main(mocked_context)
+
+    mock_install_freesurfer_license.assert_called_once()
+    mock_prepare.assert_called_once()
+    mock_get_bids_data.assert_called_once()
+    mock_pretend_it_ran.assert_called_once_with(
+        mocked_gear_options, expected_app_options
+    )
+    mock_save_metadata.assert_called_once()
+    # check that the "dry-run" key is added used when calling save_metadata:
+    mock_save_metadata.assert_called_once_with(mocked_context, {"dry-run": "true"})
+    mock_run.assert_not_called()
+    mock_post_run.assert_called_once()
 
 
 def test_run_at_project_level_fails(mocked_context_for_project_level, caplog):

@@ -104,7 +104,7 @@ def post_run(
     errors: List[str],
     warnings: List[str],
 ) -> None:
-    """Move all the results to the final destination, write out any metadata, clean-up.
+    """Move all the results to the final destination, clean-up.
 
     Args:
         gear_name (str): gear name, used in the output file names
@@ -185,6 +185,20 @@ def post_run(
 # pylint: enable=too-many-arguments
 
 
+def save_metadata(context: GearToolkitContext, extra_info: dict = None) -> None:
+    """Write out any metadata.
+
+    Args:
+        context (GearToolkitContext): gear context
+        extra_info (dict): extra info to add to the metadata (optional)
+    """
+    # For now, simply update the destination customer information:
+    info = {"QSIPrep_run": True}
+    if extra_info:
+        info.update(extra_info)
+    context.update_destination_metadata(info=info)
+
+
 # pylint: disable=too-many-locals,too-many-statements
 def main(context: GearToolkitContext) -> None:
     """Parses config and runs."""
@@ -263,6 +277,7 @@ def main(context: GearToolkitContext) -> None:
     elif gear_options["dry-run"]:
         e_code = 0
         pretend_it_ran(gear_options, app_options)
+        save_metadata(context, {"dry-run": "true"})
         e = "gear-dry-run is set: Command was NOT run."
         log.warning(e)
         warnings.append(e)
@@ -280,12 +295,11 @@ def main(context: GearToolkitContext) -> None:
             log.exception("Unable to execute command.")
 
         else:
-            # TO-DO: Placeholder for saving metadata.
             # We want to save the metadata only if the run was successful.
             # We want to save partial outputs in the event of the app crashing, because
             # the partial outputs can help pinpoint what the exact problem was. So we
             # have `post_run` further down.
-            pass
+            save_metadata(context)
 
     # Cleanup, move all results to the output directory.
     # post_run should be run regardless of dry-run or exit code.

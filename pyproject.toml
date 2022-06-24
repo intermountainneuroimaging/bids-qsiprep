@@ -16,7 +16,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = "^3.8.10"
-flywheel-gear-toolkit = "^0.6.1"
+flywheel-gear-toolkit = "^0.6.4"
 flywheel-sdk = "^15.8.0"
 psutil = "^5.9.0"
 flywheel-bids = "^1.0.7"
