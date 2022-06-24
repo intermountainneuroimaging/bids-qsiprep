@@ -148,15 +148,6 @@ def test_save_metadata(mocked_context, extra_info):
         )
 
 
-def test_save_metadata_with_error(mocked_context):
-    """Test the save_metadata method when there is an error.
-
-    The error should be logged, but the method should not raise an error."""
-    mocked_context.update_destination_metadata.side_effect = Exception("error")
-    run.save_metadata(mocked_context)
-    assert mocked_context.update_destination_metadata.called_once()
-
-
 # Test 4 use cases:
 # - errors: None/prepare_errors/get_bids_data_errors/run_errors
 @pytest.mark.parametrize(

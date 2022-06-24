@@ -193,17 +193,10 @@ def save_metadata(context: GearToolkitContext, extra_info: dict = None) -> None:
         extra_info (dict): extra info to add to the metadata (optional)
     """
     # For now, simply update the destination customer information:
-    try:
-        info = {"QSIPrep_run": True}
-        if extra_info:
-            info.update(extra_info)
-        context.update_destination_metadata(info=info)
-    # pylint: disable=broad-except
-    except Exception as e:
-        # just log an error, but don't stop the run, so that post_run is called
-        # and the output of the gear is saved.
-        log.error("Error updating destination metadata: %s", str(e))
-    # pylint: enable=broad-except
+    info = {"QSIPrep_run": True}
+    if extra_info:
+        info.update(extra_info)
+    context.update_destination_metadata(info=info)
 
 
 # pylint: disable=too-many-locals,too-many-statements
