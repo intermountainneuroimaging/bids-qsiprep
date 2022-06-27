@@ -49,13 +49,23 @@
       "optional": true
     },
     "b0-threshold": {
-      "description": "any value in the .bval file less than this will be considered a b=0 image. Current default threshold = 100; this threshold can be lowered or increased. Note, setting this too high can result in inaccurate results.",
+      "description": "any value in the .bval file less than this will be considered a b=0 image.\nCurrent default threshold = 100; this threshold can be lowered or increased.\nNote, setting this too high can result in inaccurate results.",
       "type": "number",
       "optional": true
     },
     "dwi_denoise_window": {
       "description": "window size in voxels for dwidenoise. Must be odd (default: 5). If 0, dwidwenoise will not be run.",
       "type": "integer",
+      "optional": true
+    },
+    "denoise-method": {
+      "description": "Image-based denoising method.\nEither 'dwidenoise' (MRtrix), 'patch2self' (DIPY) or none.",
+      "type": "string",
+      "enum": [
+        "",
+        "dwidenoise",
+        "patch2self"
+      ],
       "optional": true
     },
     "unringing-method": {
@@ -82,12 +92,7 @@
       "type": "boolean",
       "optional": true
     },
-    "combine-all-dwis": {
-      "description": "[DEPRECATED] combine dwis from across multiple runs for motion correction and reconstruction..",
-      "type": "boolean",
-      "optional": true
-    },
-    "separate_all_dwis": {
+    "separate-all-dwis": {
       "description": "don't attempt to combine dwis from multiple runs. Each will be processed separately.",
       "type": "boolean",
       "optional": true
@@ -127,7 +132,7 @@
       "optional": true
     },
     "output-resolution": {
-      "description": "the isotropic voxel size in mm the data will be resampled to after preprocessing. If set to a lower value than the original voxel size, your data will be upsampled using BSpline interpolation.",
+      "description": "the isotropic voxel size in mm the data will be resampled to after preprocessing.\nIf set to a lower value than the original voxel size, your data will be upsampled using BSpline interpolation.",
       "type": "number",
       "default": 1
     },
@@ -142,7 +147,7 @@
       "optional": true
     },
     "intramodal-template-iters": {
-      "description": "Number of iterations for finding the midpoint image from the b0 templates from all groups. Has no effect if there is only one group. If 0, all b0 templates are directly registered to the t1w image.",
+      "description": "Number of iterations for finding the midpoint image from the b0 templates from all groups.\nHas no effect if there is only one group.\nIf 0, all b0 templates are directly registered to the t1w image.",
       "type": "integer",
       "optional": true
     },
@@ -159,7 +164,7 @@
       "optional": true
     },
     "b0-motion-corr-to": {
-      "description": "align to the 'first' b0 volume or do an 'iterative' registration of all b0 images to their midpoint image (default: iterative)",
+      "description": "align to the 'first' b0 volume or do an 'iterative' registration of all b0 images\nto their midpoint image (default: iterative)",
       "type": "string",
       "enum": [
         "",

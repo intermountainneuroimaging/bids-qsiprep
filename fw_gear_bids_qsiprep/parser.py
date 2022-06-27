@@ -133,11 +133,11 @@ def parse_config(
         "longitudinal",
         "b0-threshold",
         "dwi_denoise_window",
+        "denoise-method",
         "unringing-method",
         "dwi-no-biascorr",
         "no-b0-harmonization",
         "denoise-after-combining",
-        "combine-all-dwis",
         "separate_all_dwis",
         "distortion-group-merge",
         "write-local-bvecs",
@@ -170,7 +170,8 @@ def parse_config(
     app_options = {key: gear_context.config.get(key) for key in app_options_keys}
 
     app_options["n_cpus"] = set_n_cpus(app_options["n_cpus"])
-    app_options["mem_mb"] = 1024 * set_mem_gb((app_options["mem_mb"] or 0) / 1024)
+    # qsiprep only takes integers:
+    app_options["mem_mb"] = int(1024 * set_mem_gb((app_options["mem_mb"] or 0) / 1024))
 
     rs_path = gear_context.get_input_path("recon-spec")
     if rs_path:
