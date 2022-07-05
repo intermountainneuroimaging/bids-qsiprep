@@ -60,13 +60,23 @@ Local linting and testing scripts are managed through
 Pre-commit allows running hooks which can be defined locally, or in other
 repositories. Default hooks to run on each commit:
 
-* check-json: JSON syntax validator
-* check-toml: TOML syntax validator (for pyproject.toml)
-* pretty-format-json: Pretty print json
-* no-commit-to-branch: Don't allow committing to master
-* isort-poetry: Run isort in poetry venv
-* black-poetry: Run black in poetry venv
-* pytest-poetry: Run pytest in poetry venv
+* `test:flywheel-lint`:
+  * black: runs `black`.
+  * hadolint: Dockerfile linter.
+  * jsonlint: JSON syntax validator.
+  * linkcheck: checks links are working.
+  * markdownlint: Markdown file linter.
+  * pydocstyle: checks python styling.
+  * safety: checks your dependencies for known security vulnerabilities.
+  * shellcheck: finds bugs in shell scripts.
+  * yamllint: YAML linter.
+* `test:helm-check`: Helm checker.
+* `test:pre-commit:isort`: runs `isort`.
+* `test:pre-commit:pylint`: gear files linter.
+* `test:pre-commit:pylint-tests`: tests files linter.
+* `test:pre-commit:pytest`: runs `pytest`.
+* `test:pre-commit:mypy`: typing checker.
+* `publish:docker:test`: builds docker image and publishes it to Docker Hub.
 
 These hooks will all run automatically on commit, but can also be run manually
 or just be disabled.
@@ -81,6 +91,38 @@ or just be disabled.
 * Enable all hooks: `pre-commit install`
 * Skip a hook on commit: `SKIP=<hook-name> git commit`
 * Skip all hooks on commit: `git commit --no-verify`
+
+### end-to-end testing
+
+Most of the tests are run by the `tests:pre-commit:pytest` hook. However, the
+"end-to-end" tests need the test Docker image and the Flywheel `API_KEY` for GA.
+
+To run it, first build the Docker images. E.g.:
+
+```shell
+docker build -t flywheel/bids-qsiprep:local .
+docker build --build-arg BASE="flywheel/bids-qsiprep:local" \
+    -t flywheel/test_bids-qsiprep:local \
+    -f tests/Dockerfile .
+```
+
+(*Note: the base Docker image is large (11.9GB), and so are these gear images)
+
+Then, log into the Flywheel platform:
+
+```shell
+fw login <my_GA_api_key>
+```
+
+Then, run:
+
+```shell
+docker run -it --rm \
+    -v $HOME/.config/flywheel/user.json:/home/qsiprep/.config/flywheel/user.json \
+    --entrypoint /bin/bash \
+    flywheel/test_bids-qsiprep:latest \
+        -c 'poetry run pytest tests/end-to-end_tests'
+```
 
 ## Adding a contribution
 
@@ -106,7 +148,7 @@ Adding the release notes does two things:
 
 1. It makes it easier for the reviewer to identify what relevant changes they should
 expect and look for in the MR, and
-2. It makes it easier to create a release./
+2. It makes it easier to create a release.
 
 #### Populating release notes
 
@@ -126,7 +168,7 @@ Where the rest of the file contains release notes for previous versions.
 #### Adding changelog entry
 
 The [changelog](./docs/changelog.md) is a place to put more informal notes about large
-design decisions.  This is useful to look back on design desicions made by you, or other
+design decisions.  This is useful to look back on design decisions made by you, or other
 engineers and try to understand why. This is not required, but is encouraged for large
 changes.
 
@@ -141,10 +183,10 @@ git pull origin main # Locally pull updates from main branch
 
 Then update the versions accordingly:
 
-1. Update poetry version: `poetry version <new_version`
+1. Update poetry version: `poetry version <new_version>`
 2. Update the version in the manifest:
     1. Update `"version"` key with new version
-    2. Update `"custom.flywheel.gear-builder.image"` key with new image version
+    2. Update `"custom.gear-builder.image"` key with new image version
 3. Commit version changes
 
 Then you can tag the version and push:
