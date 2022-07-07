@@ -338,13 +338,13 @@
       "dwi",
       "fmap"
     ],
-    "docker-image": "flywheel/bids-qsiprep:1.0.0_0.15.4",
+    "docker-image": "flywheel/bids-qsiprep:1.0.0_0.15.4rc2",
     "flywheel": {
       "suite": "BIDS Apps"
     },
     "gear-builder": {
       "category": "analysis",
-      "image": "flywheel/bids-qsiprep:1.0.0_0.15.4"
+      "image": "flywheel/bids-qsiprep:1.0.0_0.15.4rc2"
     },
     "license": {
       "non-commercial-use-only": false,
@@ -466,5 +466,5 @@
   "name": "bids-qsiprep",
   "source": "https://qsiprep.readthedocs.io/en/latest/",
   "url": "https://gitlab.com/flywheel-io/flywheel-apps/bids-qsiprep",
-  "version": "1.0.0_0.15.4"
+  "version": "1.0.0_0.15.4rc2"
 }
