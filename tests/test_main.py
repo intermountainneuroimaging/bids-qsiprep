@@ -31,6 +31,7 @@ def test_generate_command(run_bids_validation, bids_app_args):
     app_options = {
         "bids_app_args": bids_app_args,
         "anat-only": True,
+        "mem_mb": 10240,
     }
 
     cmd = main.generate_command(
@@ -59,6 +60,8 @@ def test_generate_command(run_bids_validation, bids_app_args):
         if key != "bids_app_args":
             if isinstance(val, bool):
                 assert f"--{key}" in cmd
+            elif isinstance(val, int):
+                assert f"--{key}={val}" in cmd
             else:
                 if " " in val:
                     assert f"--{key} {val}" in cmd
