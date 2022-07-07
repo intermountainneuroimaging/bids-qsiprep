@@ -129,7 +129,7 @@ def post_run(
 
     # zip any .html files in output/<analysis_id>/
     html_dir = Path(analysis_output_dir) / "qsiprep"
-    zip_htmls(html_dir, gear_options["destination-id"], str(analysis_output_dir))
+    zip_htmls(str(analysis_output_dir), gear_options["destination-id"], html_dir)
 
     # possibly save ALL intermediate output
     if gear_options["save-intermediate-output"]:
