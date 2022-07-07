@@ -11,7 +11,7 @@ ENV FLYWHEEL="/flywheel/v0"
 WORKDIR ${FLYWHEEL}
 
 # Dev install. git for pip editable install.
-RUN pip install --no-cache-dir "poetry==1.1.2" && \
+RUN pip install --no-cache-dir "poetry==1.1.13" && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Installing main dependencies
@@ -20,9 +20,7 @@ RUN poetry install --no-dev
 
 # Installing the current project (most likely to change, above layer can be cached)
 # Note: poetry requires a README.md to install the current project
-COPY run.py manifest.json README.md $FLYWHEEL/
-COPY fw_gear_bids_qsiprep $FLYWHEEL/fw_gear_bids_qsiprep
-COPY utils $FLYWHEEL/utils
+COPY ./ $FLYWHEEL/
 RUN poetry install --no-dev
 
 # Configure entrypoint
