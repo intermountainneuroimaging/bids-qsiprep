@@ -276,7 +276,7 @@
     },
     "mem_mb": {
       "description": "Maximum memory to use (MB). Leave blank or set to 0 to use the maximum available in the system.",
-      "default": 10240,
+      "optional": true,
       "type": "integer"
     },
     "write-graph": {
