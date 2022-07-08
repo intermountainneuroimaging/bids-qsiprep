@@ -7,6 +7,8 @@ FROM pennbbl/qsiprep:0.15.4 as base
 
 LABEL maintainer="support@flywheel.io"
 
+ENV HOME=/root/
+
 ENV FLYWHEEL="/flywheel/v0"
 WORKDIR ${FLYWHEEL}
 
