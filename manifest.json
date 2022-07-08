@@ -432,7 +432,15 @@
     "QT_BASE_DIR": "/opt/qt512",
     "QTDIR": "/opt/qt512",
     "SHLVL": "1",
-    "SUBJECTS_DIR": "/opt/freesurfer/subjects"
+    "SUBJECTS_DIR": "/opt/freesurfer/subjects",
+    "FSLDIR": "/opt/fsl-6.0.5.1",
+    "FSLMULTIFILEQUIT": "TRUE",
+    "MKL_NUM_THREADS": "1",
+    "OMP_NUM_THREADS": "1",
+    "MRTRIX_NTHREADS": "1",
+    "KMP_WARNINGS": "0",
+    "IS_DOCKER_8395080871": "1",
+    "FLYWHEEL": "/flywheel/v0"
   },
   "inputs": {
     "bidsignore": {
