@@ -5,7 +5,6 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-from flywheel_gear_toolkit.utils.metadata import Metadata
 
 import run
 
@@ -13,6 +12,7 @@ MOCKED_RUN_LABEL = "foo_label"
 MOCKED_SUBJECT_LABEL = "sub-Mocked"
 
 TESTS_ASSETS = Path(__file__).parent / "data"
+
 
 # Test 2 use cases:
 # - download_bids_for_runlevel returns an error: True/None
@@ -134,20 +134,24 @@ def test_post_run(
     )
 
 
+@pytest.fixture
+def mock_add_gear_info(mocker):
+    return mocker.patch("flywheel_gear_toolkit.utils.metadata.Metadata.add_gear_info")
+
+
 # Test 2 use cases:
 # - extra_info: None/some dict:
 @pytest.mark.parametrize("extra_info", [None, {"foo": "bar"}])
-@patch("flywheel_gear_toolkit.utils.metadata.Metadata.add_gear_info")
-def test_save_metadata(mocked_context, extra_info):
+def test_save_metadata(mocked_context, extra_info, mock_add_gear_info):
     """Test the save_metadata method"""
     run.save_metadata(mocked_context, TESTS_ASSETS / "sample_dwiqc_json", extra_info)
-    assert Metadata.add_gear_info.called_once()
+    assert mock_add_gear_info.called_once()
     if extra_info:
         # check that the extra_info was added to the update_destination_metadata call:
         # (call_args[1] is the first argument of the
         # "mocked_context.update_destination_metadata" call.)
         assert all(
-            Metadata.add_gear_info.call_args[1][k] == v for k, v in extra_info.items()
+            mock_add_gear_info.call_args[1][k] == v for k, v in extra_info.items()
         )
 
 
