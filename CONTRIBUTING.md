@@ -118,7 +118,8 @@ Then, run:
 
 ```shell
 docker run -it --rm \
-    -v $HOME/.config/flywheel/user.json:/home/qsiprep/.config/flywheel/user.json \
+    -v $PWD/tests/data:/flywheel/v0/tests/data:ro \
+    -v $HOME/.config/flywheel/user.json:/home/qsiprep/.config/flywheel/user.json:ro \
     --entrypoint /bin/bash \
     flywheel/test_bids-qsiprep:latest \
         -c 'poetry run pytest tests/end-to-end_tests'
