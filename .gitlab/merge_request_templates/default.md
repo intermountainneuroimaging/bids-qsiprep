@@ -1,7 +1,6 @@
+# Tasks
 
-## Tasks
-
-### General
+## General
 
 - [ ] [Release Notes](https://gitlab.com/flywheel-io/flywheel-apps/templates/skeleton/-/blob/main/CONTRIBUTING.md#populating-release-notes)
 
@@ -9,11 +8,10 @@
 
 - [ ] Tests
 
-### Gear specific (if applicable)
+## Gear specific (if applicable)
 
 - [ ] Example run:
 
-- [ ] Test data [added to data-registry](https://gitlab.com/flywheel-io/scientific-solutions/data-registry#b-contributing-data)
+- [ ] Test data [added to data-registry](https://gitlab.com/flywheel-io/qa/data-registry/-/blob/master/README.md#contributing-data)
 
 - [ ] Regression test for gear added to Qase
-
