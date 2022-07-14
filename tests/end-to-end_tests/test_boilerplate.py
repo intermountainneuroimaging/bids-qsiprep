@@ -8,8 +8,8 @@ However, it allows us to test the app dependencies.
 
 import json
 import logging
+import os
 from glob import glob
-from os import chdir
 from pathlib import Path
 
 import pytest
@@ -22,7 +22,12 @@ log = logging.getLogger(__name__)
 
 
 @pytest.mark.skipif(
-    not Path("/flywheel/v0/").is_dir(), reason="Only for testing inside container"
+    not Path("/flywheel/v0/").is_dir()
+    or not os.access(
+        Path(os.environ.get("FREESURFER_HOME", run.FREESURFER_HOME)) / "license.txt",
+        os.W_OK,
+    ),
+    reason="Only for testing inside container",
 )
 def test_boilerplate_run(
     tmpdir,
@@ -45,7 +50,7 @@ def test_boilerplate_run(
     install_gear_results(zip_filename, tmpdir)
     # the "install_gear_results" unzips the contents of 'zip_filename' into a folder of
     # the same name:
-    chdir(tmpdir / zip_filename.stem)
+    os.chdir(tmpdir / zip_filename.stem)
 
     with run.GearToolkitContext(input_args=[]) as gtk_context:
 

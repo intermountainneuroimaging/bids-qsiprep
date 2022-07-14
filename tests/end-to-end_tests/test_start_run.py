@@ -8,8 +8,8 @@ about 10 hrs., we execute the call with "timeout" and a customizable time (set i
 
 import json
 import logging
+import os
 from glob import glob
-from os import chdir
 from pathlib import Path
 
 import pytest
@@ -24,7 +24,12 @@ allowed_run_time_min = 3
 
 
 @pytest.mark.skipif(
-    not Path("/flywheel/v0/").is_dir(), reason="Only for testing inside container"
+    not Path("/flywheel/v0/").is_dir()
+    or not os.access(
+        Path(os.environ.get("FREESURFER_HOME", run.FREESURFER_HOME)) / "license.txt",
+        os.W_OK,
+    ),
+    reason="Only for testing inside container",
 )
 def test_start_run(
     tmpdir,
@@ -49,7 +54,7 @@ def test_start_run(
     install_gear_results(zip_filename, tmpdir)
     # the "install_gear_results" unzips the contents of 'zip_filename' into a folder of
     # the same name:
-    chdir(tmpdir / zip_filename.stem)
+    os.chdir(tmpdir / zip_filename.stem)
 
     with run.GearToolkitContext(input_args=[]) as gtk_context:
 
