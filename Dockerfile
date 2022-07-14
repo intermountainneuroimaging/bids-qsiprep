@@ -13,7 +13,12 @@ ENV FLYWHEEL="/flywheel/v0"
 WORKDIR ${FLYWHEEL}
 
 # Dev install. git for pip editable install.
-RUN pip install --no-cache-dir "poetry==1.1.13" && \
+RUN rm /etc/apt/sources.list.d/cuda.list \
+       /etc/apt/sources.list.d/nvidia-ml.list && \
+    apt-get update && \
+    apt-get install --no-install-recommends -y git=1:2.17.1-1ubuntu0.12 && \
+    apt-get clean && \
+    pip install --no-cache-dir "poetry==1.1.13" && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Installing main dependencies
