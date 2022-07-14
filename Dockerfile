@@ -12,14 +12,23 @@ ENV HOME=/root/
 ENV FLYWHEEL="/flywheel/v0"
 WORKDIR ${FLYWHEEL}
 
-# Dev install. git for pip editable install.
+# Install git to run pre-commit hooks inside container:
 RUN rm /etc/apt/sources.list.d/cuda.list \
        /etc/apt/sources.list.d/nvidia-ml.list && \
     apt-get update && \
     apt-get install --no-install-recommends -y git=1:2.17.1-1ubuntu0.12 && \
     apt-get clean && \
-    pip install --no-cache-dir "poetry==1.1.13" && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# install vendored poetry
+ENV POETRY_HOME=/opt/poetry
+ENV POETRY_VERSION=1.1.13
+ENV POETRY_VIRTUALENVS_CREATE=false
+ENV PATH="$POETRY_HOME/bin:$PATH"
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN curl -fLSs https://raw.githubusercontent.com/python-poetry/poetry/$POETRY_VERSION/get-poetry.py | python; \
+    ln -sf /opt/poetry/lib/poetry/_vendor/py3.9 /opt/poetry/lib/poetry/_vendor/py3.10; \
+    chmod +x "$POETRY_HOME/bin/poetry"
 
 # Installing main dependencies
 COPY pyproject.toml poetry.lock $FLYWHEEL/

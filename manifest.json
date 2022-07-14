@@ -424,7 +424,7 @@
     "NVIDIA_REQUIRE_CUDA": "cuda>=10.2 brand=tesla,driver>=396,driver<397 brand=tesla,driver>=410,driver<411 brand=tesla,driver>=418,driver<419 brand=tesla,driver>=440,driver<441",
     "NVIDIA_VISIBLE_DEVICES": "all",
     "OS": "Linux",
-    "PATH": "/opt/qt512/bin:/opt/art/bin:/opt/convert3d-nightly/bin:/usr/local/miniconda/bin:/opt/freesurfer/bin:/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/opt/qt512/bin:/opt/fsl-6.0.5.1/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/ants/bin:/opt/dsi-studio/dsi_studio_64:/opt/mrtrix3-latest/bin:/opt/3Tissue/bin:/opt/afni-latest",
+    "PATH": "/opt/poetry/bin:/opt/qt512/bin:/opt/art/bin:/opt/convert3d-nightly/bin:/usr/local/miniconda/bin:/opt/freesurfer/bin:/bin:/opt/freesurfer/tktools:/opt/freesurfer/mni/bin:/opt/qt512/bin:/opt/fsl-6.0.5.1/bin:/usr/local/nvidia/bin:/usr/local/cuda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/ants/bin:/opt/dsi-studio/dsi_studio_64:/opt/mrtrix3-latest/bin:/opt/3Tissue/bin:/opt/afni-latest",
     "PERL5LIB": "/opt/freesurfer/mni/lib/perl5/5.8.5",
     "PKG_CONFIG_PATH": "/opt/qt512/lib/pkgconfig:/opt/qt512/lib/pkgconfig:",
     "PYTHONUNBUFFERED": "1",
@@ -440,7 +440,10 @@
     "MRTRIX_NTHREADS": "1",
     "KMP_WARNINGS": "0",
     "IS_DOCKER_8395080871": "1",
-    "FLYWHEEL": "/flywheel/v0"
+    "FLYWHEEL": "/flywheel/v0",
+    "POETRY_HOME": "/opt/poetry",
+    "POETRY_VERSION": "1.1.13",
+    "POETRY_VIRTUALENVS_CREATE": "false"
   },
   "inputs": {
     "bidsignore": {
