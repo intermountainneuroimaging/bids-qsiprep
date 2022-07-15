@@ -338,13 +338,12 @@
       "dwi",
       "fmap"
     ],
-    "docker-image": "flywheel/bids-qsiprep:1.0.0_0.15.4",
     "flywheel": {
       "suite": "BIDS Apps"
     },
     "gear-builder": {
       "category": "analysis",
-      "image": "flywheel/bids-qsiprep:1.0.0_0.15.4"
+      "image": "flywheel/bids-qsiprep:1.0.1_0.15.4"
     },
     "license": {
       "non-commercial-use-only": false,
@@ -376,7 +375,7 @@
       ]
     }
   },
-  "description": "BIDS qsiprep 1.0.0_0.15.4 \n qsiprep configures pipelines for processing diffusion-weighted MRI (dMRI) data. The main features of this software are:\n\nA BIDS-app approach to preprocessing nearly all kinds of modern diffusion MRI data.\n\nAutomatically generated preprocessing pipelines that correctly group, distortion correct, motion correct, denoise, co-register and resample your scans, producing visual reports and QC metrics.\n\nA system for running state-of-the-art reconstruction pipelines that include algorithms from Dipy, MRTrix, DSI Studio and others.\n\nA novel motion correction algorithm that works on DSI and random q-space sampling schemes",
+  "description": "BIDS qsiprep 1.0.1_0.15.4 \n qsiprep configures pipelines for processing diffusion-weighted MRI (dMRI) data. The main features of this software are:\n\nA BIDS-app approach to preprocessing nearly all kinds of modern diffusion MRI data.\n\nAutomatically generated preprocessing pipelines that correctly group, distortion correct, motion correct, denoise, co-register and resample your scans, producing visual reports and QC metrics.\n\nA system for running state-of-the-art reconstruction pipelines that include algorithms from Dipy, MRTrix, DSI Studio and others.\n\nA novel motion correction algorithm that works on DSI and random q-space sampling schemes",
   "environment": {
     "AFNI_IMSAVE_WARNINGS": "NO",
     "AFNI_INSTALLDIR": "/opt/afni-latest",
@@ -477,5 +476,5 @@
   "name": "bids-qsiprep",
   "source": "https://qsiprep.readthedocs.io/en/latest/",
   "url": "https://gitlab.com/flywheel-io/flywheel-apps/bids-qsiprep",
-  "version": "1.0.0_0.15.4"
+  "version": "1.0.1_0.15.4"
 }
