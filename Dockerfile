@@ -26,11 +26,9 @@ ENV POETRY_VERSION=1.1.13
 ENV POETRY_VIRTUALENVS_CREATE=false
 ENV PATH="$POETRY_HOME/bin:$PATH"
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-# hadolint ignore=SC1091
 RUN curl -fLSs https://raw.githubusercontent.com/python-poetry/poetry/$POETRY_VERSION/get-poetry.py | python; \
     ln -sf ${POETRY_HOME}/lib/poetry/_vendor/py3.9 ${POETRY_HOME}/lib/poetry/_vendor/py3.8; \
-    chmod +x "$POETRY_HOME/bin/poetry"; \
-    source ${POETRY_HOME}/env
+    chmod +x "$POETRY_HOME/bin/poetry"
 
 # Installing main dependencies
 COPY pyproject.toml poetry.lock $FLYWHEEL/
