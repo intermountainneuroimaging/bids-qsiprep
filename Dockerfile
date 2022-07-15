@@ -28,7 +28,8 @@ ENV PATH="$POETRY_HOME/bin:$PATH"
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -fLSs https://raw.githubusercontent.com/python-poetry/poetry/$POETRY_VERSION/get-poetry.py | python; \
     ln -sf /opt/poetry/lib/poetry/_vendor/py3.9 /opt/poetry/lib/poetry/_vendor/py3.10; \
-    chmod +x "$POETRY_HOME/bin/poetry"
+    chmod +x "$POETRY_HOME/bin/poetry"; \
+    source /opt/poetry/env
 
 # Installing main dependencies
 COPY pyproject.toml poetry.lock $FLYWHEEL/
