@@ -1,6 +1,6 @@
 include:
   - project: flywheel-io/tools/etc/qa-ci
-    ref: f73d45aeeb56fdf5190141d91982c3eb48b6e9f9
+    ref: 86843dbd606be26b06cb80560499088973e7b0b8
     file: ci/gears.yml
 
 publish:poetry:
