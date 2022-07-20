@@ -45,7 +45,8 @@ docker build --build-arg BASE=${base_image_tag} \
 # run the end-to-end tests, by running a docker container that mounts your
 # .config/flywheel folder in the container. (Note: they take about 5-6 mins to run.)
 docker run --rm \
-    -v $HOME/.config/flywheel:/home/qsiprep/.config/flywheel 
+    -v $HOME/.config/flywheel:/root/.config/flywheel \
+    -v $PWD/tests/data:/flywheel/v0/tests/data \
     --entrypoint /bin/bash \
     ${test_image_tag} \
        -c "poetry run pytest -s tests/end-to-end_tests"
