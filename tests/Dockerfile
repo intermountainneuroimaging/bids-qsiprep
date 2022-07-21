@@ -5,7 +5,8 @@ FROM ${BASE}
 
 ENV FLYWHEEL="/flywheel/v0"
 
-# Install poetry with dev dependencies:
-RUN poetry install
+# Install dev dependencies:
+RUN poetry export -f requirements.txt --dev --without-hashes -o $FLYWHEEL/dev-requirements.txt \
+    && pip install --no-cache-dir -r $FLYWHEEL/dev-requirements.txt
 
 ENTRYPOINT [""]
