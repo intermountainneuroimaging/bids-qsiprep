@@ -1,16 +1,12 @@
 include:
   - project: flywheel-io/tools/etc/qa-ci
-    ref: be488003f2b5a216d21b08ff5edd20bfa20593c7
+    ref: 13f7caaf372a51a165ef10844ff938c94748d4ea
     file: ci/gears.yml
 
 publish:poetry:
   variables:
     # Set to true to publish to pip on tags
     PUBLISH_POETRY: "false"
-
-test:pre-commit:
-  rules:
-    - when: never
 
 .extend:dind:
   tags:
