@@ -1,8 +1,7 @@
 FROM pennbbl/qsiprep:0.15.4 as base
-# the qsiprep image is huge (11.6 GB), so the GitLab CI tests fail to even
-# download it with the error: "no space left on device".
-# To create the main functionality of the gear, just comment out the previous "FROM" line
-# and uncomment this line (to use a vanilla Python):
+# the qsiprep image is huge (11.6 GB). To create the main functionality of the gear,
+# just comment out the previous "FROM" line and uncomment this line (to use a vanilla
+# Python):
 #FROM python:3.8.10-slim-buster as base
 
 LABEL maintainer="support@flywheel.io"
@@ -13,6 +12,8 @@ ENV FLYWHEEL="/flywheel/v0"
 WORKDIR ${FLYWHEEL}
 
 # Install git to run pre-commit hooks inside container:
+# (We need to rm cuda & nvidia sources because their keys are broken, and we don't
+#  need to update them anyway)
 RUN rm /etc/apt/sources.list.d/cuda.list \
        /etc/apt/sources.list.d/nvidia-ml.list && \
     apt-get update && \
@@ -32,13 +33,14 @@ RUN curl -fLSs https://raw.githubusercontent.com/python-poetry/poetry/$POETRY_VE
 
 # Installing main dependencies
 COPY pyproject.toml poetry.lock $FLYWHEEL/
-RUN poetry install --no-dev
+RUN poetry export -f requirements.txt --without-hashes -o $FLYWHEEL/requirements.txt \
+    && pip install --no-cache-dir --upgrade scipy==1.8.1 \
+    && pip install --no-cache-dir -r $FLYWHEEL/requirements.txt
 
 # Installing the current project (most likely to change, above layer can be cached)
-# Note: poetry requires a README.md to install the current project
 COPY ./ $FLYWHEEL/
-RUN poetry install --no-dev
+RUN pip install --no-cache-dir .
 
 # Configure entrypoint
 RUN chmod a+x $FLYWHEEL/run.py
-ENTRYPOINT ["poetry","run","python","/flywheel/v0/run.py"]
+ENTRYPOINT ["python","/flywheel/v0/run.py"]

@@ -1,6 +1,15 @@
 # Release notes
 
-## 1.0.0_0.15.4
+## 1.0.2_0.15.4
+
+__FIX__:
+
+`Dockerfile`: Fix the fact that `qsiprep` calls couldn't find some of the Python
+packages that came with the original base image. It now uses `poetry export` to export
+the poetry dependencies into a `requirements.txt` file, and uses `pip install` (using
+the `pip` version that `conda` uses in the base image) to install them.
+
+## 1.0.1_0.15.4
 
 __Maintenance__:
 

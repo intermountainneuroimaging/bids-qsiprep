@@ -1,6 +1,22 @@
 # Changelog
 
-## 1.0.0_0.15.4
+## 1.0.2_0.15.4
+
+The previous version crashed because the `poetry install` was installing packages
+independently of the base image Python environment (`conda`), so some `qsiprep` calls
+couldn't find packages that actually were in the `conda` environment.
+
+The current version runs `poetry export` to export the poetry dependencies into a
+`requirements.txt` file, and uses `pip install` (using the `pip` version that `conda`
+uses in the base image) to install them.
+
+The only potential problem is that, because the gear dependencies were resolved by
+`poetry` outside the base image, there might be (there are) conflicts between the base
+image dependencies and the gear dependencies. In this particular case, `scipy` versions
+conflicted. So I had to force `pip` to install the newer version of `scipy` required by
+the gear.
+
+## 1.0.1_0.15.4
 
 It was decided that, since QSIprep only runs at the `participant` level, the gear will
 only be allowed to run at the subject or at the session level. If the user needs to run
