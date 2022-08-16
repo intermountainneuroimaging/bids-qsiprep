@@ -50,11 +50,13 @@ def mocked_context(mocked_gear_options, mocked_acquisition):
         "custom": {"gear-builder": {"image": "foo/bar:v1.0"}},
     }
     mocked_destination_id = mocked_gear_options["destination-id"]
+    inputs = {}
     return MagicMock(
         spec=GearToolkitContext,
         manifest=mocked_manifest,
         client={mocked_destination_id: mocked_acquisition()},
         destination={"id": mocked_destination_id},
+        inputs=inputs,
     )
 
 
