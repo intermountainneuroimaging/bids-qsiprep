@@ -74,7 +74,6 @@ def test_parse_config(tmpdir):
 
             # list the expected calls to "context.get_input_call()":
             expected_get_input_path_calls = [
-                "freesurfer_license_file",
                 "recon-spec",
                 "eddy-config",
             ]

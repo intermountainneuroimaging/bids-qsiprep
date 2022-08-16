@@ -324,7 +324,7 @@
       "description": "Don't delete output.  Output is always zipped into a single file for easy download.  Choose this option to prevent output deletion after zipping.",
       "type": "boolean"
     },
-    "gear-FREESURFER_LICENSE": {
+    "freesurfer_license_key": {
       "description": "Text from license file generated during FreeSurfer registration. *Entries should be space separated*",
       "type": "string",
       "optional": true
