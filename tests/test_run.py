@@ -319,3 +319,47 @@ def test_run_at_project_level_fails(mocked_context_for_project_level, caplog):
         for rec in caplog.records
         if rec.levelno == logging.ERROR
     )
+
+
+def test_install_freesurfer_license_from_input_file(mocked_context, tmpdir):
+    """Make sure that the installation of the freesurfer license works.
+
+    The GTK's install_freesurfer_license tries to install the FS license from a
+    specific gear input. If that method changes where it looks for it, the gear would
+    fail to install the license, so we're writing some tests to catch that. If the test
+    fails, we'll need to change the names of the corresponding input in the
+    manifest.json
+    """
+    # This is the name of the input in the gear manifest.json:
+    manifest_input_key = "freesurfer_license_file"
+
+    dummy_fs_license = Path(tmpdir) / "dummy_fs_license.txt"
+    dummy_fs_license.touch()
+    destination_fs_path = Path(tmpdir) / "license.txt"
+    mocked_context.inputs = {manifest_input_key: str(dummy_fs_license)}
+    # specify the "get_input_path" method:
+    mocked_context.get_input_path = mocked_context.inputs.get
+    run.install_freesurfer_license(mocked_context, destination_fs_path)
+    assert destination_fs_path.exists()
+
+
+def test_install_freesurfer_license_from_config_option(mocked_context, tmpdir):
+    """Make sure that the installation of the freesurfer license works.
+
+    The GTK's install_freesurfer_license tries to install the FS license from a
+    specific gear config option. If that method changes where it looks for it, the gear
+    would fail to install the license, so we're writing some tests to catch that. If
+    the test fails, we'll need to change the names of the corresponding input in the
+    manifest.json
+    """
+    # This is the name of the input in the gear manifest.json:
+    config_option_key = "freesurfer_license_key"
+
+    dummy_fs_license = "dummy_fs_license"
+    destination_fs_path = Path(tmpdir) / "license.txt"
+    mocked_context.config = {config_option_key: dummy_fs_license}
+    # specify the "get_input_path" method:
+    # mocked_context.inputs = {}
+    mocked_context.get_input_path = mocked_context.inputs.get
+    run.install_freesurfer_license(mocked_context, destination_fs_path)
+    assert destination_fs_path.exists()

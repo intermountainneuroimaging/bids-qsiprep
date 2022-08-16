@@ -74,14 +74,13 @@ def test_parse_config(tmpdir):
 
             # list the expected calls to "context.get_input_call()":
             expected_get_input_path_calls = [
-                "freesurfer_license",
                 "recon-spec",
                 "eddy-config",
             ]
             assert mock_get_input_data.call_count == len(expected_get_input_path_calls)
 
-            # Make sure the input args "recon-spec" and "eddy-config" get return in
-            # app_options we skip the "freesurfer_license" because its key is
+            # Make sure the input args "recon-spec" and "eddy-config" get returned in
+            # app_options. We skip the "freesurfer_license" because its key is
             # "freesurfer-license-path"
             for input_path in expected_get_input_path_calls[1:]:
                 # if there was an input path in the context, it should be present in the
