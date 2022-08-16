@@ -34,7 +34,9 @@ def parse_config(
         "dry-run": gear_context.config.get("gear-dry-run"),
         "keep-output": gear_context.config.get("gear-keep-output"),
         "freesurfer-license": gear_context.config.get("gear-FREESURFER_LICENSE"),
-        "freesurfer-license-path": gear_context.get_input_path("freesurfer_license"),
+        "freesurfer-license-path": gear_context.get_input_path(
+            "freesurfer_license_file"
+        ),
         "output-dir": gear_context.output_dir,
         "destination-id": gear_context.destination["id"],
         "work-dir": gear_context.work_dir,

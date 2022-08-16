@@ -81,8 +81,8 @@ runs before running the main command.
 is specified, a default one will be used. The current default json can be found here:
 <https://github.com/PennBBL/qsiprep/blob/master/qsiprep/data/eddy_params.json>
 
-* freesurfer_license
-  * **Name**: freesurfer_license
+* freesurfer_license_file
+  * **Name**: freesurfer_license_file
   * **Type**: object
   * **Optional**: true
   * **Classification**: file

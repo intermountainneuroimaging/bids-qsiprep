@@ -455,7 +455,7 @@
       "base": "file",
       "optional": true
     },
-    "freesurfer_license": {
+    "freesurfer_license_file": {
       "description": "FreeSurfer license file, provided during registration with FreeSurfer. This file will be copied to the $FSHOME directory and used during execution of the Gear.",
       "base": "file",
       "optional": true
