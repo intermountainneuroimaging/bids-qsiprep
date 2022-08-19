@@ -1,5 +1,12 @@
 # Release notes
 
+## 1.0.3_0.15.4
+
+__FIX__:
+
+Fix the key names in the manifest to handle the FreeSurfer licenses (for both a file
+and a string) to match what the GearToolKit expects.
+
 ## 1.0.2_0.15.4
 
 __FIX__:

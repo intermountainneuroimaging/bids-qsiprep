@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3_0.15.4
+
+The previous version failed when you passed the FreeSurfer license either as an input
+file or as a config value (string) because the keys they were assigned to did not match
+what the GearToolKit expects.
+
 ## 1.0.2_0.15.4
 
 The previous version crashed because the `poetry install` was installing packages
