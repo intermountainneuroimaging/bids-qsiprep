@@ -336,7 +336,8 @@
     "bids-app-modalities": [
       "anat",
       "dwi",
-      "fmap"
+      "fmap",
+      "func"
     ],
     "flywheel": {
       "suite": "BIDS Apps"
@@ -461,8 +462,8 @@
       "optional": true
     },
     "api-key": {
-      "base": "api-key",
-      "read-only": true
+        "base": "api-key",
+        "read-only": true
     },
     "recon-spec": {
       "description": "json file specifying a reconstruction pipeline to be run after preprocessing.",

@@ -88,7 +88,6 @@ def get_bids_data(
         tree_title=tree_title,
         src_data=False,
         folders=gear_options["bids-app-modalities"],
-        dry_run=gear_options["dry-run"],
         do_validate_bids=gear_options["run-bids-validation"],
     )
     if error_code > 0 and not gear_options["ignore-bids-errors"]:
@@ -349,8 +348,9 @@ def main(context: GearToolkitContext) -> None:
 # Only execute if file is run as main, not when imported by another module
 if __name__ == "__main__":  # pragma: no cover
     # Get access to gear config, inputs, and sdk client if enabled.
-    with GearToolkitContext() as gear_context:
+    with GearToolkitContext(gear_path='/flywheel/v0/', manifest_path='/flywheel/v0/manifest.json', config_path='/flywheel/v0/config.json') as gear_context:
 
+        os.listdir('/flywheel/v0')
         # Initialize logging, set logging level based on `debug` configuration
         # key in gear config.
         gear_context.init_logging()
