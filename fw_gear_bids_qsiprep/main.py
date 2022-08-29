@@ -129,7 +129,7 @@ def run(gear_options: dict, app_options: dict) -> int:
 
     # Create output directory
     log.info("Creating output directory %s", output_analysis_id_dir)
-    Path(output_analysis_id_dir).mkdir(parents=True)
+    Path(output_analysis_id_dir).mkdir(parents=True, exist_ok=True)
 
     # This is what it is all about
     exec_command(

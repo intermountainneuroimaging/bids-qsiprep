@@ -122,7 +122,7 @@ def post_run(
         str(gear_options["output-dir"]),
         gear_options["destination-id"],
         zip_file_name,
-        dry_run=False,
+        dry_run=gear_options["dry-run"],
         exclude_files=None,
     )
 
@@ -348,9 +348,8 @@ def main(context: GearToolkitContext) -> None:
 # Only execute if file is run as main, not when imported by another module
 if __name__ == "__main__":  # pragma: no cover
     # Get access to gear config, inputs, and sdk client if enabled.
-    with GearToolkitContext(gear_path='/flywheel/v0/', manifest_path='/flywheel/v0/manifest.json', config_path='/flywheel/v0/config.json') as gear_context:
+    with GearToolkitContext() as gear_context:
 
-        os.listdir('/flywheel/v0')
         # Initialize logging, set logging level based on `debug` configuration
         # key in gear config.
         gear_context.init_logging()

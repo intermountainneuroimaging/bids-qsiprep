@@ -42,7 +42,7 @@ def pretend_it_ran(gear_options: dict, app_options: dict) -> None:
     run(gear_options, app_options)
 
     # 2) Recreate the expected output:
-    path = Path("work")
+    path = Path(gear_options["work-dir"])
 
     log.info("Creating fake output in %s", str(path))
 
@@ -59,7 +59,7 @@ def pretend_it_ran(gear_options: dict, app_options: dict) -> None:
     make_dirs_and_files(files)
 
     # Output directory
-    path = Path("output") / Path(gear_options["destination-id"])
+    path = Path(gear_options["output-dir"]) / Path(gear_options["destination-id"])
 
     log.info("Creating fake output in %s", str(path))
 
