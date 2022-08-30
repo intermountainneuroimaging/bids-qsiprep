@@ -114,6 +114,7 @@ def parse_config(
     * use-syn-sdc: ADDED
     * force-syn: ADDED
     * reports-only: ADDED for ease of access
+    * work-dir: ADDED (cause error in html generation if excluded)
     All other options from the "Other Options" section are left out, as these can be
     passed into the "bids_app_args" section
     """
@@ -178,6 +179,10 @@ def parse_config(
     eddy_path = gear_context.get_input_path("eddy-config")
     if eddy_path:
         app_options["eddy-config"] = eddy_path
+
+    work_dir = gear_options["work-dir"]
+    if work_dir:
+        app_options["work-dir"] = work_dir
 
     # TO-DO: Validate app_options here, before launching the whole code
     # Note: Is it possible to validate directly against the QSIprep parser?
