@@ -128,7 +128,7 @@ def post_run(
 
     # zip any .html files in output/<analysis_id>/
     html_dir = Path(analysis_output_dir) / "qsiprep"
-    zip_htmls(str(analysis_output_dir), gear_options["destination-id"], html_dir)
+    zip_htmls(str(gear_options["output-dir"]), gear_options["destination-id"], html_dir)
 
     # possibly save ALL intermediate output
     if gear_options["save-intermediate-output"]:
@@ -305,6 +305,7 @@ def main(context: GearToolkitContext) -> None:
             # the main functionality of the gear.
             e_code = run(gear_options, app_options)
 
+
         except RuntimeError as exc:
             e_code = 1
             errors.append(str(exc))
@@ -348,7 +349,7 @@ def main(context: GearToolkitContext) -> None:
 # Only execute if file is run as main, not when imported by another module
 if __name__ == "__main__":  # pragma: no cover
     # Get access to gear config, inputs, and sdk client if enabled.
-    with GearToolkitContext(gear_path='/flywheel/v0/', manifest_path='/flywheel/v0/manifest.json', config_path='/flywheel/v0/config.json') as gear_context:
+    with GearToolkitContext() as gear_context:
 
         # Initialize logging, set logging level based on `debug` configuration
         # key in gear config.
