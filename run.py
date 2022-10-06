@@ -8,7 +8,6 @@ import sys
 from pathlib import Path
 from typing import List, Tuple, Union
 
-from flywheel_bids.results.zip_htmls import zip_htmls
 from flywheel_bids.results.zip_intermediate import (
     zip_all_intermediate_output,
     zip_intermediate_selected,
@@ -27,6 +26,7 @@ from flywheel_gear_toolkit.utils.zip_tools import zip_output
 from fw_gear_bids_qsiprep.main import prepare, run
 from fw_gear_bids_qsiprep.parser import parse_config
 from utils.dry_run import pretend_it_ran
+from utils.zip_htmls import zip_htmls
 
 # The gear is split up into 2 main components. The run.py file which is executed
 # when the container runs. The run.py file then imports the rest of the gear as a
