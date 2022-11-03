@@ -324,6 +324,11 @@
       "description": "Don't delete output.  Output is always zipped into a single file for easy download.  Choose this option to prevent output deletion after zipping.",
       "type": "boolean"
     },
+    "gear-writable-dir": {
+        "default": "/pl/active/ics/fw_temp_data",
+        "description": "Gears expect to be able to write temporary files in /flywheel/v0/.  If this location is not writable (such as when running in Singularity), this path will be used instead.  fMRIPrep creates a large number of files so this disk space should be fast and local.",
+        "type": "string"
+    },
     "freesurfer_license_key": {
       "description": "Text from license file generated during FreeSurfer registration. *Entries should be space separated*",
       "type": "string",
@@ -344,7 +349,7 @@
     },
     "gear-builder": {
       "category": "analysis",
-      "image": "amhe4269/bids-qsiprep:1.0.3_0.15.4_inc0.5"
+      "image": "lsherbakov/bids-qsiprep:1.0.3_0.15.4_inc0.6"
     },
     "license": {
       "non-commercial-use-only": false,
@@ -477,5 +482,5 @@
   "name": "bids-qsiprep",
   "source": "https://qsiprep.readthedocs.io/en/latest/",
   "url": "https://gitlab.com/flywheel-io/flywheel-apps/bids-qsiprep",
-  "version": "1.0.3_0.15.4_inc0.5"
+  "version": "1.0.3_0.15.4_inc0.6"
 }

@@ -37,6 +37,8 @@ RUN poetry export -f requirements.txt --without-hashes -o $FLYWHEEL/requirements
     && pip install --no-cache-dir --upgrade scipy==1.8.1 \
     && pip install --no-cache-dir -r $FLYWHEEL/requirements.txt
 
+# Create Flywheel User
+RUN adduser --disabled-password --gecos "Flywheel User" flywheel
 # Installing the current project (most likely to change, above layer can be cached)
 COPY ./ $FLYWHEEL/
 RUN pip install --no-cache-dir .
