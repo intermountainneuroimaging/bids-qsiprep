@@ -39,6 +39,7 @@ log = logging.getLogger(__name__)
 # Default/fall-back folder for the FS license (in case ${FREESURFER_HOME} is not defined
 # in the environment:
 FREESURFER_HOME = "/opt/freesurfer"
+# FREESURFER_HOME = "./freesurfer"
 
 
 def get_bids_data(
@@ -249,6 +250,9 @@ def main(context: GearToolkitContext):
     # to extract the args, kwargs from the context (e.g. config.json).
     gear_options, app_options = parse_config(context)
 
+    # #adding the usual environment call
+    # environ = get_and_log_environment()
+
     # TO-DO: install_freesurfer_license from the gear_toolkit takes the gear context as
     #    an argument, so it is only valid for FW instances. However, the functionality
     #    of taking a FreeSurfer license (either string or file) and copying it to
@@ -258,9 +262,15 @@ def main(context: GearToolkitContext):
     #    install_freesurfer_license and have a "instance-dependent" function to extract
     #    the license from the context. At that point, we could extract the license e.g.
     #    in the parser, and this function can be moved to fw_gear_bids_qsiprep.main
+    # Constants that do not need to be changed
+    FREESURFER_LICENSE = "./freesurfer/license.txt"
+    # MAKE SURE FREESURFER LICENSE IS FOUND
+    os.environ["FS_LICENSE"] = str(FWV0 / "freesurfer/license.txt")
+
+    #Now install the license
     install_freesurfer_license(
         context,
-        Path(os.environ.get("FREESURFER_HOME", FREESURFER_HOME)) / "license.txt",
+        FREESURFER_LICENSE,
     )
 
     prepare_errors, prepare_warnings = prepare(
