@@ -28,6 +28,8 @@ from fw_gear_bids_qsiprep.parser import parse_config
 from utils.dry_run import pretend_it_ran
 from utils.zip_htmls import zip_htmls
 
+from utils.singularity import run_in_tmp_dir
+
 # The gear is split up into 2 main components. The run.py file which is executed
 # when the container runs. The run.py file then imports the rest of the gear as a
 # module.
@@ -37,6 +39,7 @@ log = logging.getLogger(__name__)
 # Default/fall-back folder for the FS license (in case ${FREESURFER_HOME} is not defined
 # in the environment:
 FREESURFER_HOME = "/opt/freesurfer"
+# FREESURFER_HOME = "./freesurfer"
 
 
 def get_bids_data(
@@ -213,7 +216,18 @@ def save_metadata(
 
 
 # pylint: disable=too-many-locals,too-many-statements
-def main(context: GearToolkitContext) -> None:
+def main(context: GearToolkitContext):
+    FWV0 = Path.cwd()
+    log.info("Running gear in %s", FWV0)
+    output_dir = context.output_dir
+    log.info("output_dir is %s", output_dir)
+    work_dir = context.work_dir
+    log.info("work_dir is %s", work_dir)
+
+
+    #initiat return_code
+    return_code = 0
+
     """Parses config and runs."""
     # For now, don't allow runs at the project level:
     destination = context.client.get(context.destination["id"])
@@ -222,7 +236,9 @@ def main(context: GearToolkitContext) -> None:
             "This version of the gear does not run at the project level. "
             "Try running it for each individual subject."
         )
-        sys.exit(1)
+        # sys.exit(1)
+        return_code = 1
+
 
     # Errors and warnings will always be logged when they are detected.
     # Keep a list of errors and warning to print all in one place at end of log
@@ -234,6 +250,9 @@ def main(context: GearToolkitContext) -> None:
     # to extract the args, kwargs from the context (e.g. config.json).
     gear_options, app_options = parse_config(context)
 
+    # #adding the usual environment call
+    # environ = get_and_log_environment()
+
     # TO-DO: install_freesurfer_license from the gear_toolkit takes the gear context as
     #    an argument, so it is only valid for FW instances. However, the functionality
     #    of taking a FreeSurfer license (either string or file) and copying it to
@@ -243,9 +262,15 @@ def main(context: GearToolkitContext) -> None:
     #    install_freesurfer_license and have a "instance-dependent" function to extract
     #    the license from the context. At that point, we could extract the license e.g.
     #    in the parser, and this function can be moved to fw_gear_bids_qsiprep.main
+    # Constants that do not need to be changed
+    FREESURFER_LICENSE = "./freesurfer/license.txt"
+    # MAKE SURE FREESURFER LICENSE IS FOUND
+    os.environ["FS_LICENSE"] = str(FWV0 / "freesurfer/license.txt")
+
+    #Now install the license
     install_freesurfer_license(
         context,
-        Path(os.environ.get("FREESURFER_HOME", FREESURFER_HOME)) / "license.txt",
+        FREESURFER_LICENSE,
     )
 
     prepare_errors, prepare_warnings = prepare(
@@ -340,7 +365,9 @@ def main(context: GearToolkitContext) -> None:
 
     # Exit the python script (and thus the container) with the exit
     # code returned by fw_gear_bids_qsiprep.main.run function.
-    sys.exit(e_code)
+    # sys.exit(e_code)
+    return_code = e_code
+    return return_code
 
 
 # pylint: enable=too-many-locals,too-many-statements
@@ -350,10 +377,25 @@ def main(context: GearToolkitContext) -> None:
 if __name__ == "__main__":  # pragma: no cover
     # Get access to gear config, inputs, and sdk client if enabled.
     with GearToolkitContext() as gear_context:
+        scratch_dir = run_in_tmp_dir(gear_context.config["gear-writable-dir"])
+    # Has to be instantiated twice here, since parent directories might have
+    # changed
+    with GearToolkitContext() as gear_context:
 
-        # Initialize logging, set logging level based on `debug` configuration
-        # key in gear config.
-        gear_context.init_logging()
+        # # Initialize logging, set logging level based on `debug` configuration
+        # # key in gear config.
+        # gear_context.init_logging()
 
         # Pass the gear context into main function defined above.
-        main(gear_context)
+        return_code = main(gear_context)
+    # clean up (might be necessary when running in a shared computing environment)
+    if scratch_dir:
+        log.debug("Removing scratch directory")
+        for thing in scratch_dir.glob("*"):
+            if thing.is_symlink():
+                thing.unlink()  # don't remove anything links point to
+                log.debug("unlinked %s", thing.name)
+        shutil.rmtree(scratch_dir)
+        log.debug("Removed %s", scratch_dir)
+
+    sys.exit(return_code)
